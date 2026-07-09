@@ -1,0 +1,127 @@
+.hero {
+  padding-block: calc(var(--space-6) + 2rem) var(--space-6);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background:
+    radial-gradient(ellipse 800px 500px at 80% 0%, var(--accent-soft), transparent 60%);
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+.hero__title {
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  margin-block: var(--space-3) var(--space-3);
+}
+
+.hero__accent {
+  color: var(--signal);
+}
+
+.hero__sub {
+  color: var(--text-muted);
+  max-width: 46ch;
+  font-size: 1.05rem;
+}
+
+.hero__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* --- UI mock inside the hero --- */
+.mock-frame {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+}
+
+.mock-frame__bar {
+  display: flex;
+  gap: 6px;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.mock-frame__bar span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.mock-frame__body {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  min-height: 280px;
+}
+
+.mock-frame__sidebar {
+  border-right: 1px solid var(--border);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.mock-line {
+  height: 7px;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+
+.w-60 { width: 60%; }
+.w-40 { width: 40%; }
+.w-70 { width: 70%; }
+.w-30 { width: 30%; }
+
+.mock-frame__main {
+  padding: var(--space-3);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.mock-card {
+  background: var(--surface-2);
+  border-radius: 6px;
+  height: 70px;
+  border: 1px solid var(--border);
+}
+
+.mock-chart {
+  grid-column: span 2;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 100px;
+  background: var(--surface-2);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+}
+
+.mock-chart__bar {
+  flex: 1;
+  background: linear-gradient(180deg, var(--accent), var(--signal));
+  border-radius: 3px 3px 0 0;
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .hero__grid {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    padding-top: 7rem;
+  }
+}

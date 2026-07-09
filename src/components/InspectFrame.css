@@ -1,0 +1,59 @@
+.inspect-frame {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.inspect-frame.is-active {
+  outline: 1px dashed var(--signal);
+  outline-offset: 4px;
+}
+
+.inspect-frame__tag {
+  position: absolute;
+  background: var(--base);
+  color: var(--signal);
+  border: 1px solid var(--signal);
+  padding: 2px 8px;
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 2;
+  font-size: 0.7rem;
+}
+
+.inspect-frame__tag--tl {
+  top: -10px;
+  left: -4px;
+}
+
+.inspect-frame__tag--br {
+  bottom: -10px;
+  right: -4px;
+}
+
+.inspect-frame__cursor {
+  position: absolute;
+  transform: translate(12px, 12px);
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  pointer-events: none;
+  z-index: 3;
+  white-space: nowrap;
+}
+
+/* This effect is a hover affordance, not essential content — hide on touch devices */
+@media (hover: none) {
+  .inspect-frame__tag,
+  .inspect-frame__cursor {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inspect-frame__cursor {
+    transition: none;
+  }
+}
