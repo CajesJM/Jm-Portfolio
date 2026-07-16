@@ -1,4 +1,4 @@
-import "./Contact.css";
+import "../styles/Contact.css";
 
 export default function Contact() {
   return (
@@ -6,20 +6,27 @@ export default function Contact() {
       <div className="container contact__inner">
         <span className="eyebrow">Get in touch</span>
         <h2 className="contact__heading">
-          Have a hard interface problem?
+          Have a complex problem to solve?
           <br />
-          Let's take a look at it together.
+          Let's build something that works.
         </h2>
-        <a href="mailto:hello@adareyes.design" className="contact__email">
-          hello@adareyes.design
+        <a href="mailto:markcajes24@gmail.com" className="contact__email">
+          markcajes24@gmail.com
         </a>
 
         <div className="contact__meta mono">
-          <span>Based in Manila, PH</span>
+          <span>Bohol, PH</span>
           <span>·</span>
-          <a href="#" aria-label="LinkedIn profile">LinkedIn</a>
+          <a
+            href="https://www.linkedin.com/in/john-mark-cajes-197020422/"
+            aria-label="LinkedIn profile"
+          >
+            LinkedIn
+          </a>
           <span>·</span>
-          <a href="#" aria-label="Dribbble profile">Dribbble</a>
+          <a href="https://github.com/CajesJM" aria-label="GitHub profile">
+            GitHub
+          </a>
         </div>
       </div>
     </section>

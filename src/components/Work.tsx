@@ -1,29 +1,41 @@
 import { motion } from "framer-motion";
 import InspectFrame from "./InspectFrame";
-import "./Work.css";
+import "../styles/Work.css";
+
+import tmcImage from "../assets/Projects/TMC-Connect.png";
+import ideastoneImage from "../assets/Projects/Ideastone.png";
+import votingImage from "../assets/Projects/voting-system.png";
 
 const PROJECTS = [
   {
-    tag: "case-study/01",
-    title: "Redesigning a claims dashboard for insurance analysts",
+    tag: "TMC Connect v2.0",
+    title: "TMC Connect v2.0 — Campus Digital Hub",
     summary:
-      "Cut average triage time by 38% by restructuring a dense, table-heavy workflow around task priority instead of raw data order.",
-    stack: ["Figma", "Design systems", "User research"],
+      "Attendance reimagined for campus life. Replaced paper-based attendance with QR code check-ins, GPS verification, and real-time analytics for Philippine campuses.",
+    stack: ["React", "React Native", "Firebase", "Expo", "TypeScript"],
     wide: true,
+    image: tmcImage,
+    link: "https://jmx-tmc-connect.vercel.app/",
   },
   {
-    tag: "case-study/02",
-    title: "Onboarding flow for a fintech API platform",
-    summary: "Reduced time-to-first-integration from 3 days to 40 minutes.",
-    stack: ["React", "Prototyping"],
+    tag: "Ideastone",
+    title: "Ideastone — Brand & Design System",
+    summary:
+      "A modern brand identity and component library built with React, Vite, and TypeScript, focusing on scalable UI architecture.",
+    stack: ["React", "Vite", "TypeScript"],
     wide: false,
+    image: ideastoneImage,
+    link: "https://github.com/CajesJM/ideastonebyjm.git",
   },
   {
-    tag: "case-study/03",
-    title: "Design system for a healthcare scheduling tool",
-    summary: "Unified 4 product teams under one component library.",
-    stack: ["Tokens", "Storybook"],
+    tag: "Secure Digital Voting System",
+    title: "Secure Digital Voting System",
+    summary:
+      "A secure, full-stack web-based voting platform built with C#, ASP.NET, and a modern frontend stack.",
+    stack: ["C#", "ASP.NET", "HTML/CSS"],
     wide: false,
+    image: votingImage,
+    link: "https://github.com/CajesJM/CajesJm-Voting-System.git",
   },
 ];
 
@@ -37,7 +49,7 @@ export default function Work() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          Selected work
+          Selected projects
         </motion.span>
         <motion.h2
           className="work__heading"
@@ -46,7 +58,7 @@ export default function Work() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          Three problems worth the depth.
+          Featured case studies.
         </motion.h2>
 
         <div className="work__grid">
@@ -61,7 +73,11 @@ export default function Work() {
             >
               <InspectFrame label={p.tag}>
                 <div className="work-card__thumb" aria-hidden="true">
-                  <div className="work-card__thumb-grid" />
+                  <img
+                    src={p.image}
+                    alt={p.title}
+                    className="work-card__thumb-image"
+                  />
                 </div>
               </InspectFrame>
 
@@ -73,8 +89,13 @@ export default function Work() {
                     <li key={s}>{s}</li>
                   ))}
                 </ul>
-                <a href="#" className="work-card__link mono">
-                  Read case study →
+                <a
+                  href={p.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="work-card__link mono"
+                >
+                  Visit →
                 </a>
               </div>
             </motion.article>

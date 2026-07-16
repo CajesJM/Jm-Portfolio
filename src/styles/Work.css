@@ -47,7 +47,11 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 30%, var(--accent-soft), transparent 60%);
+  background: radial-gradient(
+    circle at 30% 30%,
+    var(--accent-soft),
+    transparent 60%
+  );
 }
 
 .work-card__body {
@@ -98,4 +102,15 @@
   .work-card--wide {
     grid-column: span 1;
   }
+}
+.work-card__thumb-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.work-card__thumb:hover .work-card__thumb-image {
+  transform: scale(1.02);
 }

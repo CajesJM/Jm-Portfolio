@@ -1,5 +1,5 @@
 import { useRef, useState, type ReactNode, type MouseEvent } from "react";
-import "./InspectFrame.css";
+import "../styles/InspectFrame.css";
 
 export default function InspectFrame({
   children,

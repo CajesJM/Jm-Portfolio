@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import InspectFrame from "./InspectFrame";
-import "./Hero.css";
+import "../styles/Hero.css";
+import profilePic from "../assets/Profile_Portfolio.png";
 
 export default function Hero() {
   return (
@@ -22,9 +22,10 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            I design interfaces
+            I build intelligent
             <br />
-            that hold up under <span className="hero__accent">inspection.</span>
+            software that solves{" "}
+            <span className="hero__accent">real-world problems.</span>
           </motion.h1>
 
           <motion.p
@@ -33,9 +34,11 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Product designer focused on complex, data-heavy tools — where clarity
-            under pressure matters more than decoration. Based in Manila, working
-            with teams everywhere.
+            Full-stack developer focused on AI-powered applications, machine
+            learning, and scalable web systems. Passionate about building
+            practical software—from intelligent assistants and automation tools
+            to modern web platforms. Based in the Philippines, collaborating
+            with teams worldwide.
           </motion.p>
 
           <motion.div
@@ -59,32 +62,14 @@ export default function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          <InspectFrame label="hero/cover.fig">
-            <div className="mock-frame" aria-hidden="true">
-              <div className="mock-frame__bar">
-                <span />
-                <span />
-                <span />
-              </div>
-              <div className="mock-frame__body">
-                <div className="mock-frame__sidebar">
-                  <div className="mock-line w-60" />
-                  <div className="mock-line w-40" />
-                  <div className="mock-line w-70" />
-                  <div className="mock-line w-30" />
-                </div>
-                <div className="mock-frame__main">
-                  <div className="mock-card" />
-                  <div className="mock-card" />
-                  <div className="mock-chart">
-                    {[40, 65, 30, 80, 55, 90, 45].map((h, i) => (
-                      <div key={i} className="mock-chart__bar" style={{ height: `${h}%` }} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </InspectFrame>
+          <div className="hero__photo-wrapper">
+            <img
+              src={profilePic}
+              alt="JM Cajes – Product Designer"
+              className="hero__photo"
+              loading="lazy"
+            />
+          </div>
         </motion.div>
       </div>
     </section>
