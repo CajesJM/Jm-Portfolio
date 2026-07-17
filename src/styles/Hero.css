@@ -1,4 +1,6 @@
 .hero {
+  position: relative;
+  overflow: visible;
   padding-block: calc(var(--space-6) + 2rem) var(--space-6);
   min-height: 100vh;
   display: flex;
@@ -40,23 +42,41 @@
 }
 .hero__photo-wrapper {
   width: 100%;
-  aspect-ratio: 1 / 1; /* makes it a perfect square */
+  aspect-ratio: 1 / 1;
   overflow: hidden;
-  border-radius: 12px; /* soft rounding, matches the design */
+  border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
 .hero__photo {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* fills the square without distortion */
+  object-fit: cover;
   display: block;
   transition: transform 0.3s ease;
 }
 
-/* Optional: subtle zoom on hover (while InspectFrame overlay appears) */
 .hero__photo-wrapper:hover .hero__photo {
   transform: scale(1.02);
+}
+
+.hero__lanyard-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero__lanyard-wrapper canvas {
+  pointer-events: auto;
+}
+
+.hero__copy {
+  position: relative;
+  z-index: 2;
 }
 
 @media (max-width: 900px) {
@@ -65,5 +85,24 @@
   }
   .hero {
     padding-top: 7rem;
+  }
+}
+@media (max-width: 768px) {
+  .hero__lanyard-wrapper {
+    position: static;
+    width: 100%;
+    height: 380px;
+    margin-top: 2rem;
+    pointer-events: auto;
+  }
+
+  .hero__copy {
+    z-index: auto;
+  }
+}
+@media (max-width: 768px) {
+  .hero__grid {
+    display: flex;
+    flex-direction: column;
   }
 }

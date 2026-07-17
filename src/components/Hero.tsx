@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import "../styles/Hero.css";
+import Lanyard from "./Lanyard-component/Lanyard";
 import profilePic from "../assets/Profile_Portfolio.png";
+import cardBack from "../assets/card-back.png";
 
 export default function Hero() {
   return (
@@ -62,12 +64,15 @@ export default function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          <div className="hero__photo-wrapper">
-            <img
-              src={profilePic}
-              alt="JM Cajes – Product Designer"
-              className="hero__photo"
-              loading="lazy"
+          <div className="hero__lanyard-wrapper">
+            <Lanyard
+              position={[0, 0, 12]}
+              gravity={[0, -40, 0]}
+              fov={20}
+              frontImage={profilePic}
+              backImage={cardBack}
+              imageFit="cover"
+              transparent
             />
           </div>
         </motion.div>
