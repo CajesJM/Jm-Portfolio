@@ -1,72 +1,53 @@
 import { useEffect, useState } from "react";
 import "../styles/Nav.css";
-import logo from "../assets/logo1.png";
 
-const LINKS = [
-  { href: "#work", label: "Projects" },
-  { href: "#process", label: "Process" },
+const links = [
+  { href: "#work", label: "Work" },
+  { href: "#about", label: "About" },
   { href: "#contact", label: "Contact" },
 ];
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("work");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const sections = document.querySelectorAll("section[id]");
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: "-20% 0px -35% 0px",
-        threshold: 0.2,
-      },
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
   }, []);
 
   return (
     <header className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
       <div className="container nav__inner">
-        <a href="#top" className="nav__logo">
-          <img src={logo} alt="JM Cajes Logo" className="nav__logo-image" />
+        <a className="nav__brand" href="#top" aria-label="JM Cajes, home">
+          JM<span>®</span>
         </a>
-        <nav aria-label="Primary">
-          <ul className="nav__links mono">
-            {LINKS.map((l) => {
-              const sectionId = l.href.replace("#", "");
-              const isActive = activeSection === sectionId;
-
-              return (
-                <li key={l.href}>
-                  <a
-                    href={l.href}
-                    className={isActive ? "nav__link--active" : ""}
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              );
-            })}
+        <button
+          className="nav__menu"
+          type="button"
+          aria-expanded={open}
+          aria-controls="primary-navigation"
+          onClick={() => setOpen((value) => !value)}
+        >
+          {open ? "Close" : "Menu"}
+        </button>
+        <nav id="primary-navigation" className={open ? "is-open" : ""} aria-label="Primary navigation">
+          <ul className="nav__links">
+            {links.map((link, index) => (
+              <li key={link.href}>
+                <a href={link.href} onClick={() => setOpen(false)}>
+                  <span>0{index + 1}</span>
+                  {link.label}
+                </a>
+              </li>
+            ))}
           </ul>
         </nav>
-        <a href="#contact" className="btn btn-ghost nav__cta">
-          Let's talk
+        <a className="nav__availability" href="mailto:markcajes24@gmail.com">
+          <i />
+          Available for work
         </a>
       </div>
     </header>

@@ -1,41 +1,37 @@
 import { motion } from "framer-motion";
-import InspectFrame from "./InspectFrame";
-import "../styles/Work.css";
-
 import tmcImage from "../assets/Projects/TMC-Connect.png";
 import ideastoneImage from "../assets/Projects/Ideastone.png";
 import votingImage from "../assets/Projects/voting-system.png";
+import "../styles/Work.css";
 
-const PROJECTS = [
+const projects = [
   {
-    tag: "TMC Connect v2.0",
-    title: "TMC Connect v2.0 — Campus Digital Hub",
-    summary:
-      "Attendance reimagined for campus life. Replaced paper-based attendance with QR code check-ins, GPS verification, and real-time analytics for Philippine campuses.",
-    stack: ["React", "React Native", "Firebase", "Expo", "TypeScript"],
-    wide: true,
+    number: "01",
+    type: "Mobile + Web Product",
+    title: "TMC Connect",
+    summary: "A cross-platform campus hub replacing paper attendance with QR check-ins, GPS verification, event management, and live analytics.",
+    stack: ["React Native", "TypeScript", "Firebase", "Expo"],
     image: tmcImage,
-    link: "https://jmx-tmc-connect.vercel.app/",
+    link: "https://cajes-jm-tmc-connect.vercel.app/",
+    featured: true,
   },
   {
-    tag: "Ideastone",
-    title: "Ideastone — Brand & Design System",
-    summary:
-      "A modern brand identity and component library built with React, Vite, and TypeScript, focusing on scalable UI architecture.",
-    stack: ["React", "Vite", "TypeScript"],
-    wide: false,
+    number: "02",
+    type: "Brand + Web Experience",
+    title: "Ideastone",
+    summary: "A visual identity and responsive product experience built around a reusable component system.",
+    stack: ["React", "Vite", "UI/UX"],
     image: ideastoneImage,
-    link: "https://github.com/CajesJM/ideastonebyjm.git",
+    link: "https://github.com/CajesJM/ideastonebyjm",
   },
   {
-    tag: "Secure Digital Voting System",
-    title: "Secure Digital Voting System",
-    summary:
-      "A secure, full-stack web-based voting platform built with C#, ASP.NET, and a modern frontend stack.",
+    number: "03",
+    type: "Full-stack Platform",
+    title: "Digital Voting",
+    summary: "A focused web voting system designed to make school elections more structured, accessible, and secure.",
     stack: ["C#", "ASP.NET", "HTML/CSS"],
-    wide: false,
     image: votingImage,
-    link: "https://github.com/CajesJM/CajesJm-Voting-System.git",
+    link: "https://github.com/CajesJM/CajesJm-Voting-System",
   },
 ];
 
@@ -43,61 +39,42 @@ export default function Work() {
   return (
     <section id="work" className="work">
       <div className="container">
-        <motion.span
-          className="eyebrow"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          Selected projects
-        </motion.span>
-        <motion.h2
-          className="work__heading"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          Featured case studies.
-        </motion.h2>
+        <div className="work__header">
+          <div>
+            <span className="eyebrow">Selected work / 2024—26</span>
+            <h2 className="section-heading">Projects with a purpose.</h2>
+          </div>
+          <p>From campus tools to design-led platforms, I like building useful products with a clear point of view.</p>
+        </div>
 
-        <div className="work__grid">
-          {PROJECTS.map((p, i) => (
+        <div className="work__list">
+          {projects.map((project, index) => (
             <motion.article
-              key={p.tag}
-              className={`work-card ${p.wide ? "work-card--wide" : ""}`}
-              initial={{ opacity: 0, y: 24 }}
+              className={`project ${project.featured ? "project--featured" : ""}`}
+              key={project.title}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
+              transition={{ duration: 0.65, delay: index * 0.08 }}
             >
-              <InspectFrame label={p.tag}>
-                <div className="work-card__thumb" aria-hidden="true">
-                  <img
-                    src={p.image}
-                    alt={p.title}
-                    className="work-card__thumb-image"
-                  />
+              <a href={project.link} target="_blank" rel="noreferrer" aria-label={`View ${project.title}`}>
+                <div className="project__image">
+                  <img src={project.image} alt={`${project.title} interface preview`} />
+                  <span className="project__view mono">View project ↗</span>
                 </div>
-              </InspectFrame>
-
-              <div className="work-card__body">
-                <h3 className="work-card__title">{p.title}</h3>
-                <p className="work-card__summary">{p.summary}</p>
-                <ul className="work-card__stack mono">
-                  {p.stack.map((s) => (
-                    <li key={s}>{s}</li>
-                  ))}
-                </ul>
-                <a
-                  href={p.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="work-card__link mono"
-                >
-                  Visit →
-                </a>
-              </div>
+                <div className="project__meta">
+                  <div>
+                    <span className="mono">{project.number} / {project.type}</span>
+                    <h3>{project.title}</h3>
+                  </div>
+                  <div className="project__details">
+                    <p>{project.summary}</p>
+                    <ul>
+                      {project.stack.map((item) => <li className="mono" key={item}>{item}</li>)}
+                    </ul>
+                  </div>
+                </div>
+              </a>
             </motion.article>
           ))}
         </div>

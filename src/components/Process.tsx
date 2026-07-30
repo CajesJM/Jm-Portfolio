@@ -1,48 +1,53 @@
 import { motion } from "framer-motion";
 import "../styles/Process.css";
 
-const STEPS = [
-  {
-    title: "Understand the context first",
-    body: "I start by understanding the real user pain points—whether it's manual attendance tracking, confusing voting systems, or fragmented brand identities. I look at existing workflows, user feedback, and technical constraints before writing a single line of code.",
-  },
-  {
-    title: "Build with real data",
-    body: "Prototypes and MVPs should reflect reality. I use actual data structures, real edge cases, and practical constraints from the start—whether it's Firebase for real-time updates, C# for backend logic, or React Native for mobile experiences.",
-  },
-  {
-    title: "Iterate based on feedback",
-    body: "Shipping is just the beginning. I monitor how users actually interact with the system, gather feedback, and treat every release as a chance to improve. Features like QR check-ins, secure voting, and design systems all evolve through continuous iteration.",
-  },
+const capabilities = [
+  ["01", "Product thinking", "Turning a rough idea into a focused, usable product."],
+  ["02", "UI/UX design", "Clear structure, expressive interfaces, and thoughtful interaction."],
+  ["03", "Frontend development", "Responsive React experiences built with maintainable TypeScript."],
+  ["04", "Mobile development", "Cross-platform experiences with React Native and Expo."],
 ];
 
 export default function Process() {
   return (
-    <section id="process" className="process">
-      <div className="container">
-        <span className="eyebrow">How I work</span>
-        <h2 className="process__heading">A short, honest process.</h2>
-
-        <div className="process__list">
-          {STEPS.map((s, i) => (
-            <motion.div
-              className="process__step"
-              key={s.title}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-            >
-              <span className="process__index mono">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <h3 className="process__title">{s.title}</h3>
-                <p className="process__body">{s.body}</p>
-              </div>
-            </motion.div>
-          ))}
+    <section id="about" className="process">
+      <div className="container process__intro">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <span className="eyebrow">About / Capabilities</span>
+          <h2 className="section-heading">Curious by nature.<br />Intentional by design.</h2>
+        </motion.div>
+        <div className="process__bio">
+          <p className="process__lead">I’m an IT student at Trinidad Municipal College who enjoys the entire journey from sketching an interface to shipping the working product.</p>
+          <p>I care about useful technology, strong visual systems, and learning by building. Right now I’m exploring web development, mobile products, interface motion, and practical uses of AI.</p>
+          <a className="mono" href="https://github.com/CajesJM" target="_blank" rel="noreferrer">More on GitHub ↗</a>
         </div>
+      </div>
+
+      <div className="container process__capabilities">
+        {capabilities.map(([number, title, body], index) => (
+          <motion.div
+            className="capability"
+            key={title}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ delay: index * 0.08 }}
+          >
+            <span className="mono">{number}</span>
+            <h3>{title}</h3>
+            <p>{body}</p>
+            <span className="capability__arrow">↗</span>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="process__marquee" aria-hidden="true">
+        <div>React · TypeScript · Figma · Firebase · Expo · UI/UX · React Native ·</div>
+        <div>React · TypeScript · Figma · Firebase · Expo · UI/UX · React Native ·</div>
       </div>
     </section>
   );
