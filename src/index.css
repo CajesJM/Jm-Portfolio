@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&family=Syne:wght@500;600;700;800&family=Unbounded:wght@600;700&display=swap");
 
 :root {
   --ink: #11110f;
@@ -9,6 +9,7 @@
   --line: rgba(17, 17, 15, 0.18);
   --line-dark: rgba(249, 248, 243, 0.18);
   --display: "Syne", sans-serif;
+  --logo: "Unbounded", sans-serif;
   --body: "Manrope", sans-serif;
   --mono: "DM Mono", monospace;
   --container: 1240px;

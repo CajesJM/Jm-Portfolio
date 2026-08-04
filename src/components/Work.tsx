@@ -1,15 +1,16 @@
 import { motion } from "framer-motion";
 import tmcImage from "../assets/Projects/TMC-Connect.png";
-import ideastoneImage from "../assets/Projects/Ideastone.png";
+import wipeitgoodImage from "../assets/Projects/wipeitgood.png";
 import votingImage from "../assets/Projects/voting-system.png";
 import "../styles/Work.css";
 
 const projects = [
   {
     number: "01",
-    type: "Mobile + Web Product",
+    type: "Mobile + Web Application",
     title: "TMC Connect",
-    summary: "A cross-platform campus hub replacing paper attendance with QR check-ins, GPS verification, event management, and live analytics.",
+    summary:
+      "A cross-platform campus hub replacing paper attendance with QR check-ins, GPS verification, event management, and live analytics.",
     stack: ["React Native", "TypeScript", "Firebase", "Expo"],
     image: tmcImage,
     link: "https://cajes-jm-tmc-connect.vercel.app/",
@@ -17,18 +18,20 @@ const projects = [
   },
   {
     number: "02",
-    type: "Brand + Web Experience",
-    title: "Ideastone",
-    summary: "A visual identity and responsive product experience built around a reusable component system.",
-    stack: ["React", "Vite", "UI/UX"],
-    image: ideastoneImage,
-    link: "https://github.com/CajesJM/ideastonebyjm",
+    type: "Web Application",
+    title: "Wipe It Good Trading",
+    summary:
+      "A online ordering platform where users can browse products, place orders, and track purchases, while the admin manages products and orders efficiently.",
+    stack: ["React", "Vite", "TypeScript", "Node.js", "Express"],
+    image: wipeitgoodImage,
+    link: "https://wipeitgoodtrading.vercel.app/",
   },
   {
     number: "03",
     type: "Full-stack Platform",
     title: "Digital Voting",
-    summary: "A focused web voting system designed to make school elections more structured, accessible, and secure.",
+    summary:
+      "A focused web voting system designed to make school elections more structured, accessible, and secure.",
     stack: ["C#", "ASP.NET", "HTML/CSS"],
     image: votingImage,
     link: "https://github.com/CajesJM/CajesJm-Voting-System",
@@ -42,9 +45,14 @@ export default function Work() {
         <div className="work__header">
           <div>
             <span className="eyebrow">Selected work / 2024—26</span>
-            <h2 className="section-heading">Projects with a purpose.</h2>
+            <h2 className="section-heading work__heading">
+              Projects with a goal.
+            </h2>
           </div>
-          <p>From campus tools to design-led platforms, I like building useful products with a clear point of view.</p>
+          <p>
+            From student & listener to Lead Developer, I like building useful
+            applications with a clear point of view.
+          </p>
         </div>
 
         <div className="work__list">
@@ -57,20 +65,34 @@ export default function Work() {
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.65, delay: index * 0.08 }}
             >
-              <a href={project.link} target="_blank" rel="noreferrer" aria-label={`View ${project.title}`}>
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`View ${project.title}`}
+              >
                 <div className="project__image">
-                  <img src={project.image} alt={`${project.title} interface preview`} />
+                  <img
+                    src={project.image}
+                    alt={`${project.title} interface preview`}
+                  />
                   <span className="project__view mono">View project ↗</span>
                 </div>
                 <div className="project__meta">
                   <div>
-                    <span className="mono">{project.number} / {project.type}</span>
+                    <span className="mono">
+                      {project.number} / {project.type}
+                    </span>
                     <h3>{project.title}</h3>
                   </div>
                   <div className="project__details">
                     <p>{project.summary}</p>
                     <ul>
-                      {project.stack.map((item) => <li className="mono" key={item}>{item}</li>)}
+                      {project.stack.map((item) => (
+                        <li className="mono" key={item}>
+                          {item}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>

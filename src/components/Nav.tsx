@@ -22,7 +22,8 @@ export default function Nav() {
     <header className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
       <div className="container nav__inner">
         <a className="nav__brand" href="#top" aria-label="JM Cajes, home">
-          JM<span>®</span>
+          <span className="nav__brand-mark">JM</span>
+          <span className="nav__brand-name">Cajes</span>
         </a>
         <button
           className="nav__menu"
@@ -33,12 +34,15 @@ export default function Nav() {
         >
           {open ? "Close" : "Menu"}
         </button>
-        <nav id="primary-navigation" className={open ? "is-open" : ""} aria-label="Primary navigation">
+        <nav
+          id="primary-navigation"
+          className={open ? "is-open" : ""}
+          aria-label="Primary navigation"
+        >
           <ul className="nav__links">
-            {links.map((link, index) => (
+            {links.map((link) => (
               <li key={link.href}>
                 <a href={link.href} onClick={() => setOpen(false)}>
-                  <span>0{index + 1}</span>
                   {link.label}
                 </a>
               </li>

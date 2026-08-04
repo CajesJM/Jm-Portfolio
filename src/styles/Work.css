@@ -16,6 +16,11 @@
   font-size: 0.95rem;
 }
 
+.work__heading {
+  max-width: none;
+  font-size: clamp(3rem, 5vw, 4.4rem);
+}
+
 .work__list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -135,6 +140,10 @@
 
   .work__header {
     margin-bottom: 3rem;
+  }
+
+  .work__heading {
+    font-size: clamp(2.6rem, 11vw, 3.8rem);
   }
 
   .work__list {

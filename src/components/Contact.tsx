@@ -11,10 +11,18 @@ export default function Contact() {
           viewport={{ once: true }}
           transition={{ duration: 0.65 }}
         >
-          <span className="eyebrow">Have an idea?</span>
-          <h2>Let’s make it<br /><em>work beautifully.</em></h2>
+          <span className="eyebrow">Have a project in mind?</span>
+          <h2>
+            Let’s build something
+            <br />
+            <em>that works.</em>
+          </h2>
         </motion.div>
-        <a className="contact__circle" href="mailto:markcajes24@gmail.com" aria-label="Email John Mark">
+        <a
+          className="contact__circle"
+          href="mailto:markcajes24@gmail.com"
+          aria-label="Email John Mark"
+        >
           <span className="mono">Start a conversation</span>
           <strong>↗</strong>
         </a>
@@ -22,9 +30,25 @@ export default function Contact() {
       <div className="container contact__bottom">
         <p className="mono">© 2026 JM Cajes</p>
         <div>
-          <a className="mono" href="https://github.com/CajesJM" target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a className="mono" href="https://www.linkedin.com/in/john-mark-cajes-197020422/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
-          <a className="mono" href="#top">Back to top ↑</a>
+          <a
+            className="mono"
+            href="https://github.com/CajesJM"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub ↗
+          </a>
+          <a
+            className="mono"
+            href="https://www.linkedin.com/in/john-mark-cajes-197020422/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            LinkedIn ↗
+          </a>
+          <a className="mono" href="#top">
+            Back to top ↑
+          </a>
         </div>
       </div>
     </footer>
