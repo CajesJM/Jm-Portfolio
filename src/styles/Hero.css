@@ -26,7 +26,7 @@
   z-index: -1;
   display: flex;
   width: max-content;
-  color: rgba(17, 17, 15, 0.08);
+  color: color-mix(in srgb, var(--ink) 8%, transparent);
   font-family: var(--display);
   font-size: clamp(5rem, 12vw, 12rem);
   font-weight: 800;
@@ -142,7 +142,7 @@
 .hero__portrait::after {
   position: absolute;
   inset: 0;
-  border: 10px solid rgba(249, 248, 243, 0.25);
+  border: 10px solid color-mix(in srgb, var(--paper) 25%, transparent);
   content: "";
   pointer-events: none;
 }
@@ -188,7 +188,8 @@
   position: absolute;
   z-index: 4;
   border: 1px solid var(--ink);
-  background: rgba(249, 248, 243, 0.94);
+  color: var(--ink);
+  background: var(--paper-glass);
   box-shadow: 6px 6px 0 var(--ink);
   backdrop-filter: blur(8px);
 }

@@ -20,6 +20,16 @@
     <title>JM Cajes — Creative Developer</title>
   </head>
   <body>
+    <script>
+      (() => {
+        try {
+          const theme = localStorage.getItem("portfolio-theme") === "ink" ? "ink" : "paper";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme === "ink" ? "dark" : "light";
+          document.querySelector('meta[name="theme-color"]').content = theme === "ink" ? "#11110f" : "#efeee8";
+        } catch {}
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

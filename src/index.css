@@ -8,12 +8,23 @@
   --muted: #68675f;
   --line: rgba(17, 17, 15, 0.18);
   --line-dark: rgba(249, 248, 243, 0.18);
+  --paper-glass: rgba(249, 248, 243, 0.94);
   --display: "Syne", sans-serif;
   --logo: "Unbounded", sans-serif;
   --body: "Manrope", sans-serif;
   --mono: "DM Mono", monospace;
   --container: 1240px;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme="ink"] {
+  --ink: #f1f0eb;
+  --paper: #11110f;
+  --paper-deep: #1a1a17;
+  --muted: #999890;
+  --line: rgba(241, 240, 235, 0.18);
+  --line-dark: rgba(17, 17, 15, 0.18);
+  --paper-glass: rgba(17, 17, 15, 0.94);
 }
 
 *,
@@ -36,6 +47,16 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: color 680ms var(--ease), background-color 680ms var(--ease);
+}
+
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  transition-property: color, background-color, border-color, box-shadow,
+    text-decoration-color, -webkit-text-stroke-color, transform, opacity !important;
+  transition-duration: 680ms !important;
+  transition-timing-function: var(--ease) !important;
 }
 
 ::selection {

@@ -210,7 +210,7 @@
 
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
-  color: #918f86;
+  color: var(--muted);
 }
 
 .contact-form input:focus,

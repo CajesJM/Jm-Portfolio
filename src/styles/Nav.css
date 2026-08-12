@@ -9,7 +9,7 @@
 
 .nav--scrolled {
   border-bottom: 1px solid var(--line);
-  background: rgba(239, 238, 232, 0.9);
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
   backdrop-filter: blur(16px);
 }
 
@@ -87,6 +87,89 @@
   cursor: pointer;
 }
 
+.nav__actions {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: clamp(0.8rem, 2vw, 1.5rem);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 0;
+  padding: 0.25rem;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.theme-toggle:disabled {
+  cursor: pointer;
+}
+
+.theme-reveal {
+  position: fixed;
+  z-index: 1000;
+  border: 2px solid var(--reveal-color);
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 32px var(--reveal-color);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.theme-reveal::before,
+.theme-reveal::after {
+  position: absolute;
+  border: 1px solid var(--reveal-color);
+  border-radius: inherit;
+  content: "";
+}
+
+.theme-reveal::before {
+  inset: 6%;
+}
+
+.theme-reveal::after {
+  inset: 12%;
+  opacity: 0.65;
+}
+
+.theme-toggle__label {
+  min-width: 2.7rem;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.theme-toggle__track {
+  position: relative;
+  display: block;
+  width: 36px;
+  height: 20px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+}
+
+.theme-toggle__track span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform 680ms var(--ease);
+}
+
+[data-theme="ink"] .theme-toggle__track span {
+  transform: translateX(16px);
+}
+
 .nav__availability:hover {
   text-decoration: underline;
   text-underline-offset: 5px;
@@ -119,7 +202,8 @@
 @media (max-width: 760px) {
   .nav__inner {
     min-height: 70px;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
+    gap: 0.7rem;
   }
 
   .nav__menu {
@@ -163,5 +247,29 @@
     font-size: 0.78rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+  }
+
+  .nav__actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .nav__menu {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 430px) {
+  .nav__inner {
+    gap: 0.5rem;
+  }
+
+  .nav__theme-desktop .theme-toggle__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
 }

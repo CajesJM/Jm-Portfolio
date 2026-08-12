@@ -18,7 +18,7 @@
 }
 
 .process__bio p {
-  color: #a7a59c;
+  color: color-mix(in srgb, var(--paper) 65%, transparent);
 }
 
 .process__bio .process__lead {
@@ -53,12 +53,12 @@
 
 .capability:hover {
   padding-inline: 1rem;
-  background: rgba(249, 248, 243, 0.06);
+  background: color-mix(in srgb, var(--paper) 6%, transparent);
 }
 
 .capability > span:first-child,
 .capability p {
-  color: #8b8981;
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
 }
 
 .capability h3 {
@@ -94,7 +94,7 @@
   font-weight: 700;
   letter-spacing: -0.06em;
   line-height: 1;
-  -webkit-text-stroke: 1px rgba(249, 248, 243, 0.3);
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--paper) 30%, transparent);
   animation: processMarquee 25s linear infinite;
 }
 

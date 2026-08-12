@@ -145,7 +145,7 @@
   width: min(1120px, 100%);
   height: min(92vh, 900px);
   overflow: hidden;
-  border: 1px solid rgba(249, 248, 243, 0.3);
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
   background: var(--paper);
   grid-template-rows: auto minmax(0, 1fr);
 }

@@ -19,7 +19,7 @@
 
 .activity__header > p {
   max-width: 35ch;
-  color: rgba(239, 238, 232, 0.62);
+  color: color-mix(in srgb, var(--paper) 62%, transparent);
   line-height: 1.75;
 }
 
@@ -53,14 +53,14 @@
 }
 
 .activity__stats span {
-  color: rgba(239, 238, 232, 0.58);
+  color: color-mix(in srgb, var(--paper) 58%, transparent);
   font-size: 0.58rem;
 }
 
 .activity__scroll {
   overflow-x: auto;
   padding: 1rem 0 1.5rem;
-  scrollbar-color: rgba(239, 238, 232, 0.35) transparent;
+  scrollbar-color: color-mix(in srgb, var(--paper) 35%, transparent) transparent;
 }
 
 .activity__scroll:focus-visible {
@@ -79,7 +79,7 @@
   margin-bottom: 0.6rem;
   grid-template-columns: repeat(53, 12px);
   gap: 5px;
-  color: rgba(239, 238, 232, 0.55);
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
   font-family: var(--mono);
   font-size: 0.58rem;
   text-transform: uppercase;
@@ -96,7 +96,7 @@
   flex: 0 0 28px;
   grid-template-rows: repeat(7, 12px);
   gap: 5px;
-  color: rgba(239, 238, 232, 0.45);
+  color: color-mix(in srgb, var(--paper) 45%, transparent);
   font-size: 0.52rem;
 }
 
@@ -126,7 +126,7 @@
 .activity__legend i {
   width: 12px;
   height: 12px;
-  background: rgba(239, 238, 232, 0.08);
+  background: color-mix(in srgb, var(--paper) 8%, transparent);
 }
 
 .activity__cell {
@@ -139,15 +139,15 @@
 
 .activity__cell[data-level="low"],
 .activity__legend i[data-level="low"] {
-  background: rgba(239, 238, 232, 0.25);
+  background: color-mix(in srgb, var(--paper) 25%, transparent);
 }
 .activity__cell[data-level="medium"],
 .activity__legend i[data-level="medium"] {
-  background: rgba(239, 238, 232, 0.48);
+  background: color-mix(in srgb, var(--paper) 48%, transparent);
 }
 .activity__cell[data-level="high"],
 .activity__legend i[data-level="high"] {
-  background: rgba(239, 238, 232, 0.72);
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
 }
 .activity__cell[data-level="highest"],
 .activity__legend i[data-level="highest"] {
@@ -184,7 +184,7 @@
   align-items: center;
   gap: 5px;
   margin-top: 0.4rem;
-  color: rgba(239, 238, 232, 0.48);
+  color: color-mix(in srgb, var(--paper) 48%, transparent);
   font-size: 0.55rem;
 }
 
@@ -206,7 +206,7 @@
   justify-content: center;
   flex-direction: column;
   gap: 2rem;
-  color: rgba(239, 238, 232, 0.55);
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
 }
 
 .activity__loading > div {
@@ -220,7 +220,7 @@
   width: 12px;
   height: 12px;
   flex: 0 0 12px;
-  background: rgba(239, 238, 232, 0.12);
+  background: color-mix(in srgb, var(--paper) 12%, transparent);
   animation: activityPulse 1.2s ease-in-out infinite alternate;
 }
 
@@ -235,7 +235,7 @@
 
 .activity__empty p {
   max-width: 40ch;
-  color: rgba(239, 238, 232, 0.62);
+  color: color-mix(in srgb, var(--paper) 62%, transparent);
 }
 
 .activity__empty .button {
@@ -256,7 +256,7 @@
 
 @keyframes activityPulse {
   to {
-    background: rgba(239, 238, 232, 0.38);
+    background: color-mix(in srgb, var(--paper) 38%, transparent);
   }
 }
 
