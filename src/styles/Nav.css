@@ -77,9 +77,19 @@
   align-items: center;
   justify-self: end;
   gap: 0.55rem;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
   font-family: var(--mono);
   font-size: 0.67rem;
   text-transform: uppercase;
+  cursor: pointer;
+}
+
+.nav__availability:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
 }
 
 .nav__availability i {

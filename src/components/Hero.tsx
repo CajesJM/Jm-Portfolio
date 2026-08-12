@@ -140,7 +140,7 @@ export default function Hero() {
             <div className="hero__portrait">
               <img
                 src={heroCharacter}
-                alt="3D illustrated portrait of John Mark Cajes holding a tablet"
+                alt="3D illustrated portrait of John Mark Cajes"
               />
             </div>
             <div className="hero__card hero__card--role">

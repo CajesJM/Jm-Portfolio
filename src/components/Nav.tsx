@@ -12,6 +12,10 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
+  function openContactModal() {
+    window.dispatchEvent(new Event("open-contact-modal"));
+  }
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
@@ -50,10 +54,15 @@ export default function Nav() {
             ))}
           </ul>
         </nav>
-        <a className="nav__availability" href="mailto:markcajes24@gmail.com">
+        <button
+          className="nav__availability"
+          type="button"
+          aria-haspopup="dialog"
+          onClick={openContactModal}
+        >
           <i />
           Available for work
-        </a>
+        </button>
       </div>
     </header>
   );

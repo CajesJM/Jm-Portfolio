@@ -47,9 +47,9 @@ export default function Process() {
         </motion.div>
         <div className="process__bio">
           <p className="process__lead">
-            I’m an IT student at Trinidad Municipal College who enjoys building
-            complete digital products—from planning the interface to developing
-            and testing the final application.
+            I’m an Information Technology student and full-stack developer with
+            hands-on experience leading software projects and building
+            applications for real users.
           </p>
           <p>
             Most of what I know comes from hands-on projects. I’m currently

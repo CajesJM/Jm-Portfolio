@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import tmcImage from "../assets/Projects/TMC-Connect.png";
 import wipeitgoodImage from "../assets/Projects/wipeitgood.png";
-import votingImage from "../assets/Projects/voting-system.png";
+import ojtLogbookImage from "../assets/Projects/ojt-logbook-portfolio-cover.png";
 import "../styles/Work.css";
 
 const projects = [
@@ -28,13 +28,13 @@ const projects = [
   },
   {
     number: "03",
-    type: "Full-stack Platform",
-    title: "Digital Voting",
+    type: "Responsive Web Application",
+    title: "OJT Logbook Attendance",
     summary:
-      "A focused web voting system designed to make school elections more structured, accessible, and secure.",
-    stack: ["C#", "ASP.NET", "HTML/CSS"],
-    image: votingImage,
-    link: "https://github.com/CajesJM/CajesJm-Voting-System",
+      "An offline-ready training logbook for tracking attendance, documenting progress, and exporting records for easier student submission and review.",
+    stack: ["React", "TypeScript", "IndexedDB", "PDF/DOCX"],
+    image: ojtLogbookImage,
+    link: "https://ojtlogdance.vercel.app/",
   },
 ];
 

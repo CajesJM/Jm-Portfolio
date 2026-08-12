@@ -11,9 +11,10 @@ export default function Contact() {
   const openedAt = useRef(Date.now());
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const lastTriggerRef = useRef<HTMLElement | null>(null);
 
   function openModal() {
+    lastTriggerRef.current = document.activeElement as HTMLElement | null;
     openedAt.current = Date.now();
     setStatus("idle");
     setErrorMessage("");
@@ -22,8 +23,13 @@ export default function Contact() {
 
   function closeModal() {
     setIsOpen(false);
-    window.setTimeout(() => triggerRef.current?.focus(), 0);
+    window.setTimeout(() => lastTriggerRef.current?.focus(), 0);
   }
+
+  useEffect(() => {
+    window.addEventListener("open-contact-modal", openModal);
+    return () => window.removeEventListener("open-contact-modal", openModal);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -123,7 +129,6 @@ export default function Contact() {
             </h2>
           </motion.div>
           <button
-            ref={triggerRef}
             className="contact__circle"
             type="button"
             aria-haspopup="dialog"
