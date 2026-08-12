@@ -132,7 +132,7 @@
   }
 
   .nav nav.is-open {
-    max-height: 320px;
+    max-height: 255px;
     border-bottom: 1px solid var(--line);
   }
 
@@ -142,14 +142,16 @@
     align-items: stretch;
     flex-direction: column;
     gap: 0;
-    padding-block: 1rem 2rem;
+    padding-block: 0.35rem 0.75rem;
   }
 
   .nav__links a {
+    min-height: 44px;
     border-bottom: 1px solid var(--line);
-    padding: 1rem 0;
-    font-family: var(--display);
-    font-size: 1.5rem;
-    text-transform: none;
+    padding: 0.55rem 0;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 }

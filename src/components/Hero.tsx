@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import heroCharacter from "../assets/Hero/jm-3d-hero.png";
+import heroCharacter from "../assets/Hero/jm-3d-hero-v3.png";
 import "../styles/Hero.css";
 
 const GREETING = "Hello, I'm John Mark Cajes";

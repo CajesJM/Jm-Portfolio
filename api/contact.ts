@@ -21,7 +21,10 @@ function json(data: object, status = 200) {
 
 function cleanSingleLine(value: unknown, maxLength: number) {
   return typeof value === "string"
-    ? value.replace(/[\r\n]+/g, " ").trim().slice(0, maxLength)
+    ? value
+        .replace(/[\r\n]+/g, " ")
+        .trim()
+        .slice(0, maxLength)
     : "";
 }
 
@@ -61,7 +64,10 @@ export default {
       return json({ message: "Please enter a valid email address." }, 400);
     }
     if (message.length < 20 || message.length > MAX_MESSAGE_LENGTH) {
-      return json({ message: "Your message must be between 20 and 3,000 characters." }, 400);
+      return json(
+        { message: "Your message must be between 20 and 3,000 characters." },
+        400,
+      );
     }
     if (completionTime < 2000 || completionTime > 2 * 60 * 60 * 1000) {
       return json({ message: "Please reopen the form and try again." }, 400);
@@ -69,11 +75,15 @@ export default {
 
     const apiKey = process.env.RESEND_API_KEY;
     const recipient = process.env.CONTACT_EMAIL;
-    const sender = process.env.CONTACT_FROM_EMAIL || "JM Portfolio <onboarding@resend.dev>";
+    const sender =
+      process.env.CONTACT_FROM_EMAIL || "JM Portfolio <onboarding@resend.dev>";
 
     if (!apiKey || !recipient) {
       console.error("Contact form environment variables are not configured.");
-      return json({ message: "The contact form is temporarily unavailable." }, 503);
+      return json(
+        { message: "The contact form is temporarily unavailable." },
+        503,
+      );
     }
 
     const emailResponse = await fetch("https://api.resend.com/emails", {
@@ -103,8 +113,17 @@ export default {
 
     if (!emailResponse.ok) {
       const providerMessage = await emailResponse.text();
-      console.error("Resend rejected the contact email:", emailResponse.status, providerMessage);
-      return json({ message: "Your message could not be sent. Please try again shortly." }, 502);
+      console.error(
+        "Resend rejected the contact email:",
+        emailResponse.status,
+        providerMessage,
+      );
+      return json(
+        {
+          message: "Your message could not be sent. Please try again shortly.",
+        },
+        502,
+      );
     }
 
     return json({ message: "Message sent." });

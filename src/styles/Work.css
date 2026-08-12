@@ -38,15 +38,6 @@
   background: var(--paper-deep);
 }
 
-.project__image::after {
-  position: absolute;
-  inset: 0;
-  border: 0 solid var(--ink);
-  content: "";
-  transition: border-width 350ms var(--ease);
-  pointer-events: none;
-}
-
 .project__image img {
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -71,10 +62,6 @@
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 300ms ease, transform 300ms var(--ease);
-}
-
-.project a:hover .project__image::after {
-  border-width: 8px;
 }
 
 .project a:hover img {
