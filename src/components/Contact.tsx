@@ -8,6 +8,7 @@ export default function Contact() {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
   const openedAt = useRef(Date.now());
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -18,6 +19,7 @@ export default function Contact() {
     openedAt.current = Date.now();
     setStatus("idle");
     setErrorMessage("");
+    setMessage("");
     setIsOpen(true);
   }
 
@@ -100,6 +102,7 @@ export default function Contact() {
       }
 
       form.reset();
+      setMessage("");
       setStatus("success");
     } catch (error) {
       setStatus("error");
@@ -250,10 +253,20 @@ export default function Contact() {
                         name="message"
                         rows={6}
                         minLength={20}
-                        maxLength={3000}
+                        maxLength={1000}
                         placeholder="What are you building, and how can I help?"
+                        value={message}
+                        onChange={(event) => setMessage(event.target.value)}
                         required
                       />
+                      <span
+                        className={`contact-form__counter mono ${
+                          message.length >= 900 ? "is-near" : ""
+                        }`}
+                        aria-hidden="true"
+                      >
+                        {message.length} / 1000
+                      </span>
                     </label>
 
                     <label className="contact-form__honeypot" aria-hidden="true">

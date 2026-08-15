@@ -208,6 +208,17 @@
   resize: vertical;
 }
 
+.contact-form__counter {
+  justify-self: end;
+  color: var(--muted);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+}
+
+.contact-form__counter.is-near {
+  color: #8b1e1e;
+}
+
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
   color: var(--muted);

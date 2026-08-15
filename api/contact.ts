@@ -1,4 +1,4 @@
-const MAX_MESSAGE_LENGTH = 3000;
+const MAX_MESSAGE_LENGTH = 1000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type ContactPayload = {
@@ -65,7 +65,7 @@ export default {
     }
     if (message.length < 20 || message.length > MAX_MESSAGE_LENGTH) {
       return json(
-        { message: "Your message must be between 20 and 3,000 characters." },
+        { message: "Your message must be between 20 and 1,000 characters." },
         400,
       );
     }
