@@ -10,11 +10,17 @@
   position: absolute;
   z-index: -1;
   inset: 0;
-  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
   content: "";
-  mask-image: linear-gradient(to bottom, transparent, black 28%, transparent 92%);
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 28%,
+    transparent 92%
+  );
   opacity: 0.22;
 }
 
@@ -121,67 +127,198 @@
   --rx: 0deg;
   --ry: 0deg;
   position: relative;
-  max-width: 520px;
+  max-width: 550px;
   margin-inline: auto;
-  padding: 9%;
+  padding: 7%;
   transform: rotateX(var(--rx)) rotateY(var(--ry));
   transform-style: preserve-3d;
   transition: transform 500ms var(--ease);
 }
 
 .hero__portrait {
+  isolation: isolate;
   position: relative;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 48% 48% 4px 4px;
-  background: var(--paper-deep);
-  box-shadow: 18px 24px 0 var(--ink);
+  aspect-ratio: 1 / 1.12;
+  overflow: visible;
   animation: portraitFloat 6s ease-in-out infinite;
 }
 
-.hero__portrait::after {
+.hero__aperture {
   position: absolute;
-  inset: 0;
-  border: 10px solid color-mix(in srgb, var(--paper) 25%, transparent);
-  content: "";
+  z-index: 0;
+  top: 7%;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1;
   pointer-events: none;
+  transform: translateZ(-18px);
+  transform-style: preserve-3d;
 }
 
-.hero__portrait img {
-  width: 100%;
-  aspect-ratio: 1 / 1.12;
-  object-fit: cover;
-  filter: saturate(0.45) contrast(1.04);
-  transform: scale(1.04);
+.hero__aperture-ring {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.hero__aperture-ring--outer {
+  inset: -4%;
+  border: 1px solid var(--line);
+  border-right-color: transparent;
+  border-bottom-style: dashed;
+  animation: orbitalTurn 46s linear infinite reverse;
+}
+
+.hero__aperture-ring--inner {
+  inset: 8%;
+  border: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  border-top-color: transparent;
+  border-left-style: dashed;
+  animation: orbitalTurn 34s linear infinite;
+}
+
+.hero__portrait-image {
+  position: absolute;
+  z-index: 2;
+  inset: -1% -4% 0;
+  width: 108%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: saturate(0.78) contrast(1.035);
+}
+
+.hero__orbital-art {
+  position: absolute;
+  inset: 12%;
+  width: 76%;
+  height: 76%;
+  object-fit: contain;
+  filter: opacity(0.64);
+  pointer-events: none;
+  transition: filter 680ms var(--ease);
+  animation: orbitalTurn 32s linear infinite;
+}
+
+[data-theme="ink"] .hero__orbital-art {
+  filter: invert(1) opacity(0.72);
+}
+
+.hero__aperture-node {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--paper);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.hero__aperture-node--one {
+  top: 1%;
+  left: 49%;
+}
+
+.hero__aperture-node--two {
+  right: 2%;
+  bottom: 29%;
+}
+
+.hero__aperture-node--three {
+  bottom: 16%;
+  left: 7%;
+}
+
+.hero__portrait-baseline {
+  position: absolute;
+  z-index: 3;
+  right: 2%;
+  bottom: 1%;
+  left: 6%;
+  height: 1px;
+  background: var(--ink);
+  box-shadow: 0 8px 0 color-mix(in srgb, var(--ink) 26%, transparent);
+}
+
+.hero__portrait-baseline::before,
+.hero__portrait-baseline::after {
+  position: absolute;
+  bottom: -5px;
+  width: 1px;
+  height: 11px;
+  background: var(--ink);
+  content: "";
+}
+
+.hero__portrait-baseline::before {
+  left: 0;
+}
+
+.hero__portrait-baseline::after {
+  right: 0;
 }
 
 .hero__orbit {
   position: absolute;
   z-index: 3;
-  top: 2%;
-  right: 2%;
+  top: 1%;
+  right: -1%;
   width: 76px;
   height: 76px;
   border: 1px solid var(--ink);
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--paper);
-  font-size: 0;
-  animation: spin 12s linear infinite;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--paper) 58%, transparent);
+  backdrop-filter: blur(8px);
+  animation: miniOrbitTurn 18s linear infinite;
 }
 
 .hero__orbit::before,
 .hero__orbit::after {
   position: absolute;
-  width: 32px;
-  height: 1px;
-  background: var(--ink);
   content: "";
 }
 
+.hero__orbit::before {
+  inset: 13px;
+  border: 1px solid color-mix(in srgb, var(--ink) 62%, transparent);
+  border-radius: 50%;
+}
+
 .hero__orbit::after {
-  transform: rotate(90deg);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.hero__orbit i {
+  position: absolute;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--ink);
+}
+
+.hero__orbit i:nth-child(1) {
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+.hero__orbit i:nth-child(2) {
+  right: 9px;
+  bottom: 14px;
+  transform: rotate(75deg);
+}
+
+.hero__orbit i:nth-child(3) {
+  bottom: 14px;
+  left: 9px;
+  transform: rotate(195deg);
 }
 
 .hero__card {
@@ -190,13 +327,13 @@
   border: 1px solid var(--ink);
   color: var(--ink);
   background: var(--paper-glass);
-  box-shadow: 6px 6px 0 var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
   backdrop-filter: blur(8px);
 }
 
 .hero__card--role {
-  right: -4%;
-  bottom: 20%;
+  right: -5%;
+  bottom: 17%;
   display: flex;
   min-width: 190px;
   flex-direction: column;
@@ -215,8 +352,8 @@
 }
 
 .hero__card--location {
-  bottom: 8%;
-  left: 1%;
+  bottom: 2%;
+  left: -5%;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -254,19 +391,33 @@
 }
 
 @keyframes ticker {
-  to { transform: translateX(-50%); }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes portraitFloat {
-  50% { transform: translateY(-10px); }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@keyframes orbitalTurn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes miniOrbitTurn {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes typingCursor {
-  50% { opacity: 0; }
+  50% {
+    opacity: 0;
+  }
 }
 
 @media (max-width: 980px) {
@@ -321,15 +472,21 @@
   }
 
   .hero__visual {
-    padding: 7%;
-  }
-
-  .hero__portrait {
-    box-shadow: 10px 14px 0 var(--ink);
+    padding: 5%;
   }
 
   .hero__card--role {
-    right: 0;
+    right: -1%;
     min-width: 158px;
+  }
+
+  .hero__card--location {
+    left: -1%;
+  }
+
+  .hero__orbit {
+    right: 1%;
+    width: 62px;
+    height: 62px;
   }
 }

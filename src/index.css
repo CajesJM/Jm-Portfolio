@@ -54,7 +54,8 @@ html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
   transition-property: color, background-color, border-color, box-shadow,
-    text-decoration-color, -webkit-text-stroke-color, transform, opacity !important;
+    text-decoration-color, -webkit-text-stroke-color, transform, opacity,
+    filter !important;
   transition-duration: 680ms !important;
   transition-timing-function: var(--ease) !important;
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import heroCharacter from "../assets/Hero/jm-3d-hero-v3.png";
+import heroCharacter from "../assets/Hero/hero-avatar-cutout.webp";
+import sharinganOrbit from "../assets/Hero/sharingan-orbit-mask.webp";
 import "../styles/Hero.css";
 
 const GREETING = "Hello, I'm John Mark Cajes";
@@ -134,14 +135,30 @@ export default function Hero() {
             onMouseMove={handlePointerMove}
             onMouseLeave={resetTilt}
           >
-            <span className="hero__orbit mono">
-              UI · CODE · MOTION · PRODUCT ·
+            <span className="hero__orbit" aria-hidden="true">
+              <i />
+              <i />
+              <i />
             </span>
             <div className="hero__portrait">
+              <div className="hero__aperture" aria-hidden="true">
+                <span className="hero__aperture-ring hero__aperture-ring--outer" />
+                <span className="hero__aperture-ring hero__aperture-ring--inner" />
+                <img
+                  className="hero__orbital-art"
+                  src={sharinganOrbit}
+                  alt=""
+                />
+                <span className="hero__aperture-node hero__aperture-node--one" />
+                <span className="hero__aperture-node hero__aperture-node--two" />
+                <span className="hero__aperture-node hero__aperture-node--three" />
+              </div>
               <img
+                className="hero__portrait-image"
                 src={heroCharacter}
-                alt="3D illustrated portrait of John Mark Cajes"
+                alt="3D illustrated portrait of John Mark Cajes framed by an orbital ink motif"
               />
+              <span className="hero__portrait-baseline" aria-hidden="true" />
             </div>
             <div className="hero__card hero__card--role">
               <span className="mono">Current focus</span>
@@ -158,10 +175,6 @@ export default function Hero() {
           </div>
         </motion.div>
       </div>
-
-      <a className="hero__scroll mono" href="#work">
-        Scroll to explore <span>↓</span>
-      </a>
     </section>
   );
 }
