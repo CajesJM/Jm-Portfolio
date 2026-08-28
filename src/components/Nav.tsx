@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../styles/Nav.css";
 
 const links = [
-  { href: "#work", label: "Work" },
+  { href: "#work", label: "Projects" },
   { href: "#about", label: "About" },
   { href: "#album", label: "Moments" },
   { href: "#contact", label: "Contact" },
@@ -46,7 +46,9 @@ export default function Nav() {
     reveal.setAttribute("aria-hidden", "true");
     reveal.style.setProperty(
       "--reveal-color",
-      nextTheme === "ink" ? "rgba(241, 240, 235, 0.5)" : "rgba(17, 17, 15, 0.42)",
+      nextTheme === "ink"
+        ? "rgba(241, 240, 235, 0.5)"
+        : "rgba(17, 17, 15, 0.42)",
     );
     Object.assign(reveal.style, {
       left: `${origin.x}px`,
@@ -66,7 +68,11 @@ export default function Nav() {
           { opacity: 0.42, offset: 0.72 },
           { opacity: 0, transform: "translate(-50%, -50%) scale(1)" },
         ],
-        { duration: 1100, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "forwards" },
+        {
+          duration: 1100,
+          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+          fill: "forwards",
+        },
       ).finished;
     } finally {
       reveal.remove();
@@ -77,7 +83,8 @@ export default function Nav() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme === "ink" ? "dark" : "light";
+    document.documentElement.style.colorScheme =
+      theme === "ink" ? "dark" : "light";
     window.localStorage.setItem("portfolio-theme", theme);
     document
       .querySelector('meta[name="theme-color"]')
@@ -127,8 +134,12 @@ export default function Nav() {
             aria-haspopup="dialog"
             onClick={openContactModal}
           >
-            <i />
-            Available for work
+            <span className="nav__availability-signal" aria-hidden="true">
+              <i />
+            </span>
+            <span className="nav__availability-label">
+              Open to new projects
+            </span>
           </button>
         </div>
         <button

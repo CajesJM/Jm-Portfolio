@@ -76,13 +76,14 @@
   display: flex;
   align-items: center;
   justify-self: end;
-  gap: 0.55rem;
+  gap: 0.45rem;
   border: 0;
-  padding: 0;
+  padding: 0.25rem 0;
   color: inherit;
   background: transparent;
   font-family: var(--mono);
   font-size: 0.67rem;
+  letter-spacing: 0.015em;
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -170,17 +171,127 @@
   transform: translateX(16px);
 }
 
-.nav__availability:hover {
-  text-decoration: underline;
-  text-underline-offset: 5px;
+.nav__availability-signal {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 14px;
+  flex: 0 0 18px;
 }
 
-.nav__availability i {
-  width: 7px;
-  height: 7px;
+.nav__availability-signal::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--ink);
   border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, var(--ink) 0 10%, transparent 13%),
+    radial-gradient(circle at 50% 17%, var(--ink) 0 7%, transparent 10%),
+    radial-gradient(circle at 79% 67%, var(--ink) 0 7%, transparent 10%),
+    radial-gradient(circle at 21% 67%, var(--ink) 0 7%, transparent 10%),
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0 34%,
+      var(--ink) 37% 45%,
+      transparent 48%
+    );
+  content: "";
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  animation: quietSignalCore 5.6s var(--ease) infinite;
+  transition:
+    width 260ms var(--ease),
+    height 260ms var(--ease),
+    border-radius 260ms var(--ease),
+    border-color 180ms ease,
+    left 260ms var(--ease),
+    background-color 180ms ease,
+    transform 260ms var(--ease),
+    box-shadow 260ms var(--ease);
+}
+
+.nav__availability-signal::after {
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  width: 4px;
+  height: 4px;
+  border-top: 1px solid var(--ink);
+  border-right: 1px solid var(--ink);
+  content: "";
+  opacity: 0;
+  transform: translateY(-50%) rotate(45deg) translateX(-2px);
+  transition:
+    opacity 180ms ease,
+    transform 260ms var(--ease);
+}
+
+.nav__availability-signal i {
+  position: absolute;
+  inset: 1px 3px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  opacity: 0;
+  animation: quietSignalRing 5.6s var(--ease) infinite;
+}
+
+[data-theme="ink"] .nav__availability-signal::before {
+  box-shadow: 0 0 6px color-mix(in srgb, var(--ink) 24%, transparent);
+}
+
+.nav__availability-label {
+  position: relative;
+  transition: transform 260ms var(--ease);
+}
+
+.nav__availability-label::after {
+  position: absolute;
+  right: 0;
+  bottom: -5px;
+  left: 0;
+  height: 1px;
   background: var(--ink);
-  animation: statusPulse 2s ease-in-out infinite;
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 300ms var(--ease);
+}
+
+.nav__availability:hover .nav__availability-signal::before,
+.nav__availability:focus-visible .nav__availability-signal::before {
+  left: 1px;
+  width: 12px;
+  height: 1px;
+  border-color: transparent;
+  border-radius: 0;
+  background: var(--ink);
+  animation-play-state: paused;
+  transform: translateY(-50%);
+}
+
+.nav__availability:hover .nav__availability-signal::after,
+.nav__availability:focus-visible .nav__availability-signal::after {
+  opacity: 1;
+  transform: translateY(-50%) rotate(45deg) translateX(0);
+}
+
+.nav__availability:hover .nav__availability-signal i,
+.nav__availability:focus-visible .nav__availability-signal i {
+  opacity: 0;
+  animation-play-state: paused;
+}
+
+.nav__availability:hover .nav__availability-label,
+.nav__availability:focus-visible .nav__availability-label {
+  transform: translateX(2px);
+}
+
+.nav__availability:hover .nav__availability-label::after,
+.nav__availability:focus-visible .nav__availability-label::after {
+  transform: scaleX(1);
 }
 
 .nav__menu {
@@ -196,6 +307,80 @@
   50% {
     opacity: 0.25;
     transform: scale(0.8);
+  }
+}
+
+@keyframes quietSignalCore {
+  0%,
+  72% {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    opacity: 1;
+    rotate: 0deg;
+  }
+
+  76% {
+    width: 8px;
+    height: 8px;
+    opacity: 0.72;
+    rotate: 90deg;
+  }
+
+  81% {
+    width: 12px;
+    height: 2px;
+    border-radius: 1px;
+    opacity: 1;
+    rotate: 270deg;
+  }
+
+  87% {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    rotate: 360deg;
+  }
+
+  100% {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    opacity: 1;
+    rotate: 360deg;
+  }
+}
+
+@keyframes quietSignalRing {
+  0%,
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+
+  81% {
+    opacity: 0.48;
+    transform: scale(0.65);
+  }
+
+  91% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__availability-signal::before,
+  .nav__availability-signal i {
+    animation: none;
+  }
+
+  .nav__availability-signal::before,
+  .nav__availability-signal::after,
+  .nav__availability-label,
+  .nav__availability-label::after {
+    transition: none;
   }
 }
 
