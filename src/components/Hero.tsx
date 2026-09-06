@@ -4,45 +4,76 @@ import heroCharacter from "../assets/Hero/hero-avatar-cutout.webp";
 import sharinganOrbit from "../assets/Hero/sharingan-orbit-mask.webp";
 import "../styles/Hero.css";
 
-const GREETING = "Hello, I'm John Mark Cajes";
+const GREETING_LABEL = "Hello, I'm John Mark Cajes";
+const GREETING_PREFIX = "Hello,  I'm  ";
+const GREETING_NAME = "John  Mark  Cajes";
+const GREETING_DISPLAY = `${GREETING_PREFIX}${GREETING_NAME}`;
+type GreetingPhase = "typing" | "flourish" | "hold" | "fade";
 
 export default function Hero() {
   const visualRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
-  const [typedGreeting, setTypedGreeting] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [typedLength, setTypedLength] = useState(0);
+  const [greetingPhase, setGreetingPhase] =
+    useState<GreetingPhase>("typing");
 
   useEffect(() => {
     if (reduceMotion) {
-      setTypedGreeting(GREETING);
+      setTypedLength(GREETING_DISPLAY.length);
+      setGreetingPhase("hold");
       return;
     }
 
-    let delay = isDeleting ? 45 : 85;
+    let delay = 76;
 
-    if (!isDeleting && typedGreeting === GREETING) {
-      delay = 1600;
-    } else if (isDeleting && typedGreeting === "") {
-      delay = 500;
+    if (greetingPhase === "typing") {
+      delay = typedLength === 0 ? 260 : 76;
+    } else if (greetingPhase === "flourish") {
+      delay = 760;
+    } else if (greetingPhase === "hold") {
+      delay = 2600;
+    } else {
+      delay = 520;
     }
 
     const timeout = window.setTimeout(() => {
-      if (!isDeleting && typedGreeting === GREETING) {
-        setIsDeleting(true);
+      if (greetingPhase === "typing") {
+        if (typedLength < GREETING_DISPLAY.length) {
+          setTypedLength((currentLength) => currentLength + 1);
+          return;
+        }
+
+        setGreetingPhase("flourish");
         return;
       }
 
-      if (isDeleting && typedGreeting === "") {
-        setIsDeleting(false);
+      if (greetingPhase === "flourish") {
+        setGreetingPhase("hold");
         return;
       }
 
-      const nextLength = typedGreeting.length + (isDeleting ? -1 : 1);
-      setTypedGreeting(GREETING.slice(0, nextLength));
+      if (greetingPhase === "hold") {
+        setGreetingPhase("fade");
+        return;
+      }
+
+      setTypedLength(0);
+      setGreetingPhase("typing");
     }, delay);
 
     return () => window.clearTimeout(timeout);
-  }, [isDeleting, reduceMotion, typedGreeting]);
+  }, [greetingPhase, reduceMotion, typedLength]);
+
+  const typedGreeting = GREETING_DISPLAY.slice(0, typedLength);
+  const typedPrefix = typedGreeting.slice(0, GREETING_PREFIX.length);
+  const typedName = typedGreeting.slice(GREETING_PREFIX.length);
+  const signatureClassName = [
+    "hero__signature",
+    `hero__signature--${greetingPhase}`,
+    reduceMotion ? "hero__signature--reduced" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   function handlePointerMove(event: MouseEvent<HTMLDivElement>) {
     if (reduceMotion || !visualRef.current) return;
@@ -74,14 +105,20 @@ export default function Hero() {
       <div className="container hero__grid">
         <div className="hero__copy">
           <motion.p
-            className="hero__intro mono"
-            aria-label={GREETING}
+            className="hero__intro"
+            aria-label={GREETING_LABEL}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span aria-hidden="true">{typedGreeting}</span>
-            <span className="hero__typing-cursor" aria-hidden="true" />
+            <span className={signatureClassName} aria-hidden="true">
+              <span>{typedPrefix}</span>
+              <span className="hero__signature-name">
+                {typedName}
+                <span className="hero__signature-line" />
+              </span>
+              <span className="hero__typing-cursor" />
+            </span>
           </motion.p>
           <motion.h1
             className="hero__headline"

@@ -39,7 +39,7 @@
   letter-spacing: -0.06em;
   line-height: 1;
   text-transform: uppercase;
-  animation: ticker 32s linear infinite;
+  animation: ticker 42s linear infinite;
 }
 
 .hero__ticker span {
@@ -56,17 +56,109 @@
 
 .hero__intro {
   display: flex;
-  min-height: 1.6em;
+  min-height: 1.35em;
   align-items: center;
   margin-bottom: 1.6rem;
+  padding-inline: 0.08em 0.2em;
+  font-family: var(--script);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.hero__signature {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  white-space: pre;
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition:
+    opacity 460ms var(--ease),
+    transform 460ms var(--ease),
+    filter 460ms var(--ease);
+}
+
+.hero__signature--fade {
+  opacity: 0;
+  transform: translateY(-0.08em);
+  filter: blur(0.5px);
+}
+
+.hero__signature-name {
+  position: relative;
+  display: inline-block;
+  padding-inline: 0.03em 0.08em;
+}
+
+.hero__signature-line {
+  position: absolute;
+  right: 0.12em;
+  bottom: -0.16em;
+  left: 0.1em;
+  height: 1px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0;
+  transform: scaleX(0) rotate(-1deg);
+  transform-origin: left center;
+  transition:
+    opacity 180ms ease,
+    transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero__signature-line::after {
+  position: absolute;
+  right: -0.08em;
+  bottom: -0.08em;
+  width: 0.16em;
+  height: 0.16em;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transform: scale(0);
+  transition:
+    opacity 220ms ease 420ms,
+    transform 280ms var(--ease) 420ms;
+  content: "";
+}
+
+.hero__signature--flourish .hero__signature-line,
+.hero__signature--hold .hero__signature-line {
+  opacity: 0.72;
+  transform: scaleX(1) rotate(-1deg);
+}
+
+.hero__signature--flourish .hero__signature-line::after,
+.hero__signature--hold .hero__signature-line::after {
+  opacity: 0.5;
+  transform: scale(1);
 }
 
 .hero__typing-cursor {
   width: 1px;
-  height: 1.15em;
-  margin-left: 0.35rem;
+  height: 0.72em;
+  margin-left: 0.18rem;
   background: currentColor;
+  transform: rotate(8deg);
+  transform-origin: center bottom;
+  transition:
+    opacity 220ms ease,
+    transform 380ms var(--ease),
+    height 380ms var(--ease);
   animation: typingCursor 0.75s steps(1, end) infinite;
+}
+
+.hero__signature--flourish .hero__typing-cursor,
+.hero__signature--hold .hero__typing-cursor,
+.hero__signature--fade .hero__typing-cursor,
+.hero__signature--reduced .hero__typing-cursor {
+  opacity: 0;
+  height: 0.46em;
+  transform: translateY(0.24em) rotate(78deg);
+  animation: none;
 }
 
 .hero h1 {

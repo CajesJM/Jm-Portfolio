@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import tmcImage from "../assets/Projects/TMC-Connect.png";
-import wipeitgoodImage from "../assets/Projects/wipeitgood.png";
-import ojtLogbookImage from "../assets/Projects/ojt-logbook-portfolio-cover.png";
+import tmcImage from "../assets/Projects/TMC-ConnectShowcase.webp";
+import wipeitgoodImage from "../assets/Projects/wipeitgoodtrading.webp";
+import ojtLogbookImage from "../assets/Projects/OJT-Logbook.webp";
 import "../styles/Work.css";
 
 const projects = [
