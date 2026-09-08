@@ -50,7 +50,7 @@ export default function Contact() {
 
       const focusable = Array.from(
         dialogRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), a[href]',
+          "button:not([disabled]), input:not([disabled]), textarea:not([disabled]), a[href]",
         ),
       );
       if (!focusable.length) return;
@@ -204,11 +204,22 @@ export default function Contact() {
 
               {status === "success" ? (
                 <div className="contact-modal__success" aria-live="polite">
-                  <span className="contact-modal__success-mark" aria-hidden="true">✓</span>
+                  <span
+                    className="contact-modal__success-mark"
+                    aria-hidden="true"
+                  >
+                    ✓
+                  </span>
                   <p className="mono">Message received</p>
                   <h2 id="contact-modal-title">Thanks for reaching out.</h2>
-                  <p>I’ll read your message and reply to the email you provided.</p>
-                  <button className="contact-form__submit" type="button" onClick={closeModal}>
+                  <p>
+                    I’ll read your message and reply to the email you provided.
+                  </p>
+                  <button
+                    className="contact-form__submit"
+                    type="button"
+                    onClick={closeModal}
+                  >
                     Close
                   </button>
                 </div>
@@ -216,8 +227,12 @@ export default function Contact() {
                 <>
                   <div className="contact-modal__heading">
                     <span className="eyebrow">Let’s talk</span>
-                    <h2 id="contact-modal-title">Tell me about your project.</h2>
-                    <p>Share a few details and I’ll get back to you by email.</p>
+                    <h2 id="contact-modal-title">
+                      Tell me about your project.
+                    </h2>
+                    <p>
+                      Share a few details and I’ll get back to you by email.
+                    </p>
                   </div>
 
                   <form className="contact-form" onSubmit={handleSubmit}>
@@ -230,7 +245,7 @@ export default function Contact() {
                           autoComplete="name"
                           minLength={2}
                           maxLength={80}
-                          placeholder="Jane Smith"
+                          placeholder="Zhey M"
                           required
                         />
                       </label>
@@ -241,7 +256,7 @@ export default function Contact() {
                           type="email"
                           autoComplete="email"
                           maxLength={254}
-                          placeholder="jane@example.com"
+                          placeholder="zhey@example.com"
                           required
                         />
                       </label>
@@ -269,18 +284,33 @@ export default function Contact() {
                       </span>
                     </label>
 
-                    <label className="contact-form__honeypot" aria-hidden="true">
+                    <label
+                      className="contact-form__honeypot"
+                      aria-hidden="true"
+                    >
                       Company website
-                      <input name="company" type="text" tabIndex={-1} autoComplete="off" />
+                      <input
+                        name="company"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
                     </label>
 
                     <div className="contact-form__footer">
-                      <p className={`contact-form__status ${status === "error" ? "is-error" : ""}`} aria-live="polite">
+                      <p
+                        className={`contact-form__status ${status === "error" ? "is-error" : ""}`}
+                        aria-live="polite"
+                      >
                         {status === "error"
                           ? errorMessage
                           : "Your details are used only to respond to this inquiry."}
                       </p>
-                      <button className="contact-form__submit" type="submit" disabled={status === "sending"}>
+                      <button
+                        className="contact-form__submit"
+                        type="submit"
+                        disabled={status === "sending"}
+                      >
                         {status === "sending" ? "Sending…" : "Send message ↗"}
                       </button>
                     </div>

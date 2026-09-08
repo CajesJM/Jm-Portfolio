@@ -4,7 +4,9 @@
   top: 0;
   right: 0;
   left: 0;
-  transition: background 250ms ease, border-color 250ms ease;
+  transition:
+    background 250ms ease,
+    border-color 250ms ease;
 }
 
 .nav--scrolled {
@@ -67,18 +69,49 @@
   text-transform: uppercase;
 }
 
-.nav__links a:hover {
-  text-decoration: underline;
-  text-underline-offset: 5px;
+.nav__link-label {
+  position: relative;
+  display: block;
+}
+
+.nav__link-label::after,
+.nav__active-line {
+  position: absolute;
+  right: 0;
+  bottom: -5px;
+  left: 0;
+  height: 1px;
+  background: var(--ink);
+  content: "";
+}
+
+.nav__link-label::after {
+  opacity: 0.38;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms var(--ease);
+}
+
+.nav__links a:hover .nav__link-label::after,
+.nav__links a:focus-visible .nav__link-label::after {
+  transform: scaleX(1);
+}
+
+.nav__active-line {
+  z-index: 1;
 }
 
 .nav__availability {
+  position: relative;
   display: flex;
+  min-height: 38px;
   align-items: center;
   justify-self: end;
   gap: 0.45rem;
-  border: 0;
-  padding: 0.25rem 0;
+  margin-right: 5px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 2.7rem 3px 0.7rem;
   color: inherit;
   background: transparent;
   font-family: var(--mono);
@@ -86,6 +119,14 @@
   letter-spacing: 0.015em;
   text-transform: uppercase;
   cursor: pointer;
+  transition:
+    border-color 260ms ease,
+    background-color 260ms ease;
+}
+
+.nav__availability:hover,
+.nav__availability:focus-visible {
+  border-color: var(--ink);
 }
 
 .nav__actions {
@@ -260,6 +301,37 @@
   transition: transform 300ms var(--ease);
 }
 
+.nav__availability-arrow {
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--paper);
+  background: var(--ink);
+  overflow: hidden;
+  transform: translateY(-50%);
+}
+
+.nav__availability-arrow svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 1.35;
+  transition: transform 300ms var(--ease);
+}
+
+.nav__availability:hover .nav__availability-arrow svg,
+.nav__availability:focus-visible .nav__availability-arrow svg {
+  transform: translate(1px, -1px);
+}
+
 .nav__availability:hover .nav__availability-signal::before,
 .nav__availability:focus-visible .nav__availability-signal::before {
   left: 1px;
@@ -379,7 +451,9 @@
   .nav__availability-signal::before,
   .nav__availability-signal::after,
   .nav__availability-label,
-  .nav__availability-label::after {
+  .nav__availability-label::after,
+  .nav__availability-arrow svg,
+  .nav__link-label::after {
     transition: none;
   }
 }

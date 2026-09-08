@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import "../styles/Nav.css";
 
 const links = [
@@ -9,8 +10,10 @@ const links = [
 ];
 
 export default function Nav() {
+  const reduceMotion = useReducedMotion();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeHref, setActiveHref] = useState("");
   const [themeTransitioning, setThemeTransitioning] = useState(false);
   const [theme, setTheme] = useState<"paper" | "ink">(() => {
     if (typeof window === "undefined") return "paper";
@@ -92,16 +95,56 @@ export default function Nav() {
   }, [theme]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    let frame = 0;
+
+    const updateNavigation = () => {
+      frame = 0;
+      setScrolled(window.scrollY > 20);
+
+      const activationLine = window.scrollY + window.innerHeight * 0.32;
+      let currentHref = "";
+
+      for (const link of links) {
+        const section = document.querySelector<HTMLElement>(link.href);
+        if (!section) continue;
+
+        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+        if (sectionTop <= activationLine) currentHref = link.href;
+      }
+
+      const reachedPageEnd =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+      setActiveHref(reachedPageEnd ? links.at(-1)?.href ?? "" : currentHref);
+    };
+
+    const requestNavigationUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateNavigation);
+    };
+
+    updateNavigation();
+    window.addEventListener("scroll", requestNavigationUpdate, {
+      passive: true,
+    });
+    window.addEventListener("resize", requestNavigationUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", requestNavigationUpdate);
+      window.removeEventListener("resize", requestNavigationUpdate);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
     <header className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
       <div className="container nav__inner">
-        <a className="nav__brand" href="#top" aria-label="JM Cajes, home">
+        <a
+          className="nav__brand"
+          href="#top"
+          aria-label="JM Cajes, home"
+        >
           <span className="nav__brand-mark">JM</span>
           <span className="nav__brand-name">Cajes</span>
         </a>
@@ -113,8 +156,32 @@ export default function Nav() {
           <ul className="nav__links">
             {links.map((link) => (
               <li key={link.href}>
-                <a href={link.href} onClick={() => setOpen(false)}>
-                  {link.label}
+                <a
+                  href={link.href}
+                  aria-current={activeHref === link.href ? "location" : undefined}
+                  onClick={() => setOpen(false)}
+                >
+                  <span className="nav__link-label">
+                    {link.label}
+                    {activeHref === link.href && (
+                      <motion.span
+                        className="nav__active-line"
+                        layoutId="nav-active-line"
+                        initial={false}
+                        transition={
+                          reduceMotion
+                            ? { duration: 0 }
+                            : {
+                                type: "spring",
+                                stiffness: 420,
+                                damping: 34,
+                                mass: 0.45,
+                              }
+                        }
+                        aria-hidden="true"
+                      />
+                    )}
+                  </span>
                 </a>
               </li>
             ))}
@@ -139,6 +206,11 @@ export default function Nav() {
             </span>
             <span className="nav__availability-label">
               Open to new projects
+            </span>
+            <span className="nav__availability-arrow" aria-hidden="true">
+              <svg viewBox="0 0 20 20" focusable="false">
+                <path d="M5 15 15 5M7 5h8v8" />
+              </svg>
             </span>
           </button>
         </div>

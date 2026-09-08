@@ -61,7 +61,7 @@
   margin-bottom: 1.6rem;
   padding-inline: 0.08em 0.2em;
   font-family: var(--script);
-  font-size: 1rem;
+  font-size: 20px;
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -186,9 +186,9 @@
 .hero__footer {
   display: flex;
   max-width: 750px;
-  align-items: end;
-  justify-content: space-between;
-  gap: 2rem;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 1.35rem;
   margin-top: 2.5rem;
 }
 
@@ -210,6 +210,11 @@
   padding-block: 0.35rem;
 }
 
+.hero__visual-stage {
+  position: relative;
+  min-width: 0;
+}
+
 .hero__visual-wrap {
   position: relative;
   perspective: 1200px;
@@ -228,7 +233,6 @@
 }
 
 .hero__portrait {
-  isolation: isolate;
   position: relative;
   aspect-ratio: 1 / 1.12;
   overflow: visible;
@@ -424,8 +428,8 @@
 }
 
 .hero__card--role {
-  right: -5%;
-  bottom: 17%;
+  right: -14%;
+  bottom: 12%;
   display: flex;
   min-width: 190px;
   flex-direction: column;
@@ -443,29 +447,236 @@
   font-size: 0.95rem;
 }
 
-.hero__card--location {
-  bottom: 2%;
-  left: -5%;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 0.9rem;
-  transform: translateZ(65px) rotate(-3deg);
+.hero__manifesto {
+  position: absolute;
+  z-index: 4;
+  top: 29%;
+  right: -20%;
+  width: 180px;
+  margin: 0;
+  color: #fff;
+  font-family: var(--script);
+  font-size: clamp(1.35rem, 1.65vw, 1.7rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 0.98;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  rotate: -3deg;
 }
 
-.hero__card--location > span {
+.hero__manifesto p {
+  margin: 0;
+}
+
+.hero__manifesto-quote,
+.hero__manifesto-close {
+  position: absolute;
+  font-family: var(--script);
+  font-size: 1em;
+  opacity: 1;
+}
+
+.hero__manifesto-quote {
+  top: -0.1em;
+  left: -0.45em;
+}
+
+.hero__manifesto-close {
+  right: 0.3em;
+  bottom: 0.02em;
+}
+
+.hero__manifesto-line {
+  display: block;
+  width: 62px;
+  height: 1px;
+  margin-top: 0.5rem;
+  margin-left: 0.15rem;
+  background: currentColor;
+  opacity: 1;
+  rotate: -2deg;
+}
+
+.hero__manifesto-arrow {
+  position: absolute;
+  top: 54%;
+  left: -42px;
+  width: 38px;
+  height: 38px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.2;
+  opacity: 1;
+}
+
+@supports not (mix-blend-mode: difference) {
+  .hero__manifesto {
+    color: var(--ink);
+  }
+}
+
+.hero__capabilities {
+  position: absolute;
+  z-index: 5;
+  top: 30%;
+  left: -18%;
   display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
+  width: 200px;
+  gap: 0.48rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.hero__capabilities::before {
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: -13px;
+  width: 20px;
+  border-left: 1px solid color-mix(in srgb, var(--ink) 38%, transparent);
   border-radius: 50%;
+  content: "";
+}
+
+.hero__capabilities li {
+  position: relative;
+}
+
+.hero__capabilities li::before {
+  position: absolute;
+  top: 50%;
+  left: -14px;
+  width: 14px;
+  height: 1px;
+  background: color-mix(in srgb, var(--ink) 46%, transparent);
+  content: "";
+  transform: scaleX(0.5);
+  transform-origin: left center;
+  transition: transform 320ms var(--ease);
+}
+
+.hero__capabilities li:nth-child(1) {
+  margin-left: 1rem;
+}
+
+.hero__capabilities li:nth-child(2) {
+  margin-left: 0.15rem;
+}
+
+.hero__capabilities li:nth-child(3) {
+  margin-left: 0;
+}
+
+.hero__capabilities li:nth-child(4) {
+  margin-left: 0.8rem;
+}
+
+.hero__capability-card {
+  display: grid;
+  min-height: 52px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  border: 1px solid var(--line);
+  padding: 0.42rem 0.6rem 0.42rem 0.45rem;
+  color: var(--ink);
+  background: var(--paper-glass);
+  box-shadow: 2px 2px 0 color-mix(in srgb, var(--ink) 18%, transparent);
+  backdrop-filter: blur(10px);
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%);
+  pointer-events: auto;
+  translate: 0 0;
+  transition:
+    border-color 260ms ease,
+    box-shadow 320ms var(--ease),
+    translate 320ms var(--ease);
+}
+
+.hero__capabilities li:hover::before {
+  transform: scaleX(1);
+}
+
+.hero__capability-card:hover {
+  border-color: var(--ink);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--ink) 24%, transparent);
+  translate: 4px 0;
+}
+
+.hero__capability-icons {
+  position: relative;
+  display: grid;
+  width: 33px;
+  height: 33px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--ink) 52%, transparent);
+}
+
+.hero__capability-icons svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.25;
+  transition: transform 420ms var(--ease);
+}
+
+.hero__capability-icons svg circle:first-child {
+  fill: currentColor;
+}
+
+.hero__capability-icons i {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  display: grid;
+  min-width: 17px;
+  height: 14px;
+  place-items: center;
+  border: 1px solid var(--ink);
+  padding-inline: 2px;
   color: var(--paper);
   background: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.38rem;
+  font-style: normal;
+  line-height: 1;
 }
 
-.hero__card--location p {
-  font-size: 0.55rem;
-  line-height: 1.4;
+.hero__capability-card:hover .hero__capability-icons svg {
+  transform: rotate(-5deg) scale(1.04);
+}
+
+.hero__capability-copy {
+  display: block;
+  min-width: 0;
+}
+
+.hero__capability-copy small,
+.hero__capability-copy strong {
+  display: block;
+}
+
+.hero__capability-copy small {
+  margin-bottom: 0.16rem;
+  color: var(--muted);
+  font-size: 0.46rem;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.hero__capability-copy strong {
+  overflow-wrap: anywhere;
+  font-family: var(--display);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
 }
 
 .hero__scroll {
@@ -512,6 +723,14 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .hero__capabilities li::before,
+  .hero__capability-card,
+  .hero__capability-icons svg {
+    transition: none;
+  }
+}
+
 @media (max-width: 980px) {
   .hero {
     padding-top: 110px;
@@ -544,6 +763,36 @@
     max-width: 470px;
   }
 
+  .hero__manifesto {
+    right: -4%;
+    width: 156px;
+    font-size: 1.25rem;
+  }
+
+  .hero__capabilities {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    max-width: 440px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 1.25rem auto 0;
+    gap: 0.55rem;
+  }
+
+  .hero__capabilities::before,
+  .hero__capabilities li::before {
+    display: none;
+  }
+
+  .hero__capabilities li:nth-child(n) {
+    margin-left: 0;
+  }
+
+  .hero__capability-card {
+    height: 100%;
+  }
+
   .hero__scroll {
     display: none;
   }
@@ -567,18 +816,105 @@
     padding: 5%;
   }
 
-  .hero__card--role {
-    right: -1%;
-    min-width: 158px;
+  .hero__capabilities {
+    width: 100%;
+    max-width: none;
+    margin-top: 0.85rem;
+    gap: 0.4rem;
   }
 
-  .hero__card--location {
-    left: -1%;
+  .hero__capability-card {
+    min-height: 48px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding: 0.35rem 0.42rem 0.35rem 0.35rem;
+  }
+
+  .hero__capability-icons {
+    width: 27px;
+    height: 27px;
+  }
+
+  .hero__capability-icons svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .hero__capability-icons i {
+    right: -4px;
+    bottom: -4px;
+    min-width: 15px;
+    height: 12px;
+    font-size: 0.33rem;
+  }
+
+  .hero__capability-copy small {
+    margin-bottom: 0.12rem;
+    font-size: 0.39rem;
+  }
+
+  .hero__capability-copy strong {
+    font-size: 0.57rem;
+    line-height: 1.18;
+  }
+
+  .hero__card--role {
+    right: 12%;
+    bottom: 10%;
+    min-width: clamp(118px, 34vw, 136px);
+    padding: 0.5rem 0.6rem;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  .hero__card--role span {
+    font-size: 0.4rem;
+  }
+
+  .hero__card--role strong {
+    font-size: 0.68rem;
+    white-space: nowrap;
+  }
+
+  .hero__manifesto {
+    top: 31%;
+    right: -10%;
+    width: 132px;
+    font-size: 1.08rem;
+  }
+
+  .hero__manifesto-line {
+    width: 46px;
+    margin-top: 0.35rem;
+  }
+
+  .hero__manifesto-arrow {
+    left: -29px;
+    width: 27px;
+    height: 27px;
   }
 
   .hero__orbit {
     right: 1%;
     width: 62px;
     height: 62px;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero__capabilities {
+    gap: 0.35rem;
+  }
+
+  .hero__capability-card:hover {
+    translate: 0 0;
+  }
+}
+
+@media (max-width: 350px) {
+  .hero__capabilities {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__capability-card {
+    min-height: 50px;
   }
 }
