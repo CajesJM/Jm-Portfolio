@@ -286,9 +286,7 @@ export default function Contact() {
               aria-modal="true"
               aria-labelledby="contact-modal-title"
               initial={
-                reduceMotion
-                  ? { opacity: 0 }
-                  : { opacity: 0, scale: 0.06 }
+                reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.06 }
               }
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: reduceMotion ? 1 : 0.06 }}
@@ -405,15 +403,15 @@ export default function Contact() {
                       />
                     </label>
 
-                    <div className="contact-form__verification">
-                      <span className="mono">Human verification</span>
-                      <TurnstileWidget
-                        onTokenChange={setCaptchaToken}
-                        resetKey={captchaResetKey}
-                      />
-                    </div>
+                    <div className="contact-form__verification-actions">
+                      <div className="contact-form__verification">
+                        <span className="mono">Human verification</span>
+                        <TurnstileWidget
+                          onTokenChange={setCaptchaToken}
+                          resetKey={captchaResetKey}
+                        />
+                      </div>
 
-                    <div className="contact-form__footer">
                       <p
                         className={`contact-form__status ${status === "error" ? "is-error" : ""}`}
                         aria-live="polite"

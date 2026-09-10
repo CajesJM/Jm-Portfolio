@@ -1,32 +1,24 @@
-# React + TypeScript + Vite
+# JM Cajes — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## About me
 
-Currently, two official plugins are available:
+I’m an IT student at TMC who enjoys the full process of building a product: understanding the problem, planning the experience, designing the interface, developing the system, and improving it through real feedback.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+My work combines practical development with intentional visual design. I’m especially interested in responsive web applications, cross-platform mobile products, backend systems, interface motion, and useful applications of AI.
 
-## React Compiler
+### What I work with
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend systems:** React and TypeScript
+- **Mobile products:** React Native and Flutter
+- **Backend and data:** Node.js, Firebase, and SQL
+- **Product UI:** Figma and UI/UX design
 
-## Expanding the Oxlint configuration
+## Portfolio features
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+- Responsive editorial layout for desktop, tablet, and mobile
+- Animated project showcase and personal moments gallery
+- Paper and ink visual themes with a custom transition
+- Live GitHub contribution activity
+- In-page résumé viewer
+- Contact form powered by Resend and protected by Cloudflare Turnstile
+- Accessible navigation, keyboard interactions, and reduced-motion support

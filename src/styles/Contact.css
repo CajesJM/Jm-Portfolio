@@ -246,10 +246,21 @@
   white-space: nowrap;
 }
 
+.contact-form__verification-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "verification submit"
+    "status status";
+  align-items: end;
+  gap: 0.75rem 1.5rem;
+  padding-top: 0.15rem;
+}
+
 .contact-form__verification {
+  grid-area: verification;
   display: grid;
   gap: 0.65rem;
-  padding-block: 0.15rem;
 }
 
 .contact-form__verification > .mono {
@@ -258,7 +269,7 @@
 }
 
 .contact-form__verification-widget {
-  width: min(100%, 420px);
+  width: min(100%, 360px);
   min-height: 65px;
 }
 
@@ -273,16 +284,10 @@
   line-height: 1.45;
 }
 
-.contact-form__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  margin-top: 0.5rem;
-}
-
 .contact-form__status {
-  max-width: 38ch;
+  grid-area: status;
+  max-width: 52ch;
+  margin: 0;
   color: var(--muted);
   font-size: 0.72rem;
   line-height: 1.5;
@@ -293,6 +298,8 @@
 }
 
 .contact-form__submit {
+  grid-area: submit;
+  align-self: end;
   min-height: 50px;
   flex: 0 0 auto;
   border: 1px solid var(--ink);
@@ -387,9 +394,18 @@
     grid-template-columns: 1fr;
   }
 
-  .contact-form__footer {
+  .contact-form__verification-actions {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "verification"
+      "status"
+      "submit";
     align-items: stretch;
-    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .contact-form__verification-widget {
+    width: 100%;
   }
 
   .contact-form__submit {
