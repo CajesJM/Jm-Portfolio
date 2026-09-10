@@ -6,6 +6,7 @@ import {
   type FormEvent,
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import TurnstileWidget from "./TurnstileWidget";
 import "../styles/Contact.css";
 
 type FormStatus = "idle" | "sending" | "success" | "error";
@@ -33,6 +34,8 @@ export default function Contact() {
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [message, setMessage] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
   const openedAt = useRef(Date.now());
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -55,6 +58,8 @@ export default function Contact() {
     setStatus("idle");
     setErrorMessage("");
     setMessage("");
+    setCaptchaToken("");
+    setCaptchaResetKey((current) => current + 1);
     setIsOpen(true);
   }
 
@@ -127,6 +132,13 @@ export default function Contact() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!captchaToken) {
+      setStatus("error");
+      setErrorMessage("Please complete the human verification first.");
+      return;
+    }
+
     setStatus("sending");
     setErrorMessage("");
 
@@ -143,6 +155,7 @@ export default function Contact() {
           message: formData.get("message"),
           company: formData.get("company"),
           startedAt: openedAt.current,
+          turnstileToken: captchaToken,
         }),
       });
 
@@ -156,6 +169,8 @@ export default function Contact() {
       setMessage("");
       setStatus("success");
     } catch (error) {
+      setCaptchaToken("");
+      setCaptchaResetKey((current) => current + 1);
       setStatus("error");
       setErrorMessage(
         error instanceof Error
@@ -390,6 +405,14 @@ export default function Contact() {
                       />
                     </label>
 
+                    <div className="contact-form__verification">
+                      <span className="mono">Human verification</span>
+                      <TurnstileWidget
+                        onTokenChange={setCaptchaToken}
+                        resetKey={captchaResetKey}
+                      />
+                    </div>
+
                     <div className="contact-form__footer">
                       <p
                         className={`contact-form__status ${status === "error" ? "is-error" : ""}`}
@@ -397,12 +420,14 @@ export default function Contact() {
                       >
                         {status === "error"
                           ? errorMessage
-                          : "Your details are used only to respond to this inquiry."}
+                          : captchaToken
+                            ? "Verified. Your details are used only to respond to this inquiry."
+                            : "Complete the verification before sending."}
                       </p>
                       <button
-                        className="contact-form__submit"
+                        className={`contact-form__submit ${status === "sending" ? "is-sending" : ""}`}
                         type="submit"
-                        disabled={status === "sending"}
+                        disabled={status === "sending" || !captchaToken}
                       >
                         {status === "sending" ? "Sending…" : "Send message ↗"}
                       </button>

@@ -52,15 +52,19 @@
   background: var(--ink);
   cursor: pointer;
   text-align: center;
-  transition: color 350ms ease, background 350ms ease, transform 450ms var(--ease);
+  transition:
+    color 350ms ease,
+    background 350ms ease,
+    transform 450ms var(--ease);
 }
 
 .contact__circle span {
   max-width: 10ch;
+  margin-left: 1.5rem;
 }
 
 .contact__circle strong {
-  margin-left: 0.4rem;
+  margin-left: 1.5rem;
   font-size: 1.5rem;
 }
 
@@ -137,7 +141,9 @@
   font-size: 2rem;
   font-weight: 300;
   line-height: 1;
-  transition: color 200ms ease, background 200ms ease;
+  transition:
+    color 200ms ease,
+    background 200ms ease;
 }
 
 .contact-modal__close:hover {
@@ -240,6 +246,33 @@
   white-space: nowrap;
 }
 
+.contact-form__verification {
+  display: grid;
+  gap: 0.65rem;
+  padding-block: 0.15rem;
+}
+
+.contact-form__verification > .mono {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+.contact-form__verification-widget {
+  width: min(100%, 420px);
+  min-height: 65px;
+}
+
+.contact-form__verification-widget > div:first-child {
+  width: 100%;
+}
+
+.contact-form__verification-error {
+  margin-top: 0.45rem;
+  color: #8b1e1e;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
 .contact-form__footer {
   display: flex;
   align-items: center;
@@ -271,7 +304,9 @@
   font-size: 0.68rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  transition: color 220ms ease, background 220ms ease;
+  transition:
+    color 220ms ease,
+    background 220ms ease;
 }
 
 .contact-form__submit:hover:not(:disabled) {
@@ -280,8 +315,12 @@
 }
 
 .contact-form__submit:disabled {
-  cursor: wait;
+  cursor: not-allowed;
   opacity: 0.55;
+}
+
+.contact-form__submit.is-sending {
+  cursor: wait;
 }
 
 .contact-modal__success {

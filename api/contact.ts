@@ -7,6 +7,13 @@ type ContactPayload = {
   message?: unknown;
   company?: unknown;
   startedAt?: unknown;
+  turnstileToken?: unknown;
+};
+
+type TurnstileResult = {
+  success?: boolean;
+  hostname?: string;
+  "error-codes"?: string[];
 };
 
 function json(data: object, status = 200) {
@@ -71,6 +78,73 @@ export default {
     }
     if (completionTime < 2000 || completionTime > 2 * 60 * 60 * 1000) {
       return json({ message: "Please reopen the form and try again." }, 400);
+    }
+
+    const turnstileToken = cleanSingleLine(body.turnstileToken, 2048);
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+
+    if (!turnstileSecret) {
+      console.error("Turnstile is not configured.");
+      return json(
+        { message: "Human verification is temporarily unavailable." },
+        503,
+      );
+    }
+
+    if (!turnstileToken) {
+      return json({ message: "Please complete the human verification." }, 400);
+    }
+
+    const verificationBody = new URLSearchParams({
+      secret: turnstileSecret,
+      response: turnstileToken,
+    });
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const visitorIp = forwardedFor?.split(",")[0]?.trim();
+    if (visitorIp) verificationBody.set("remoteip", visitorIp);
+
+    let turnstileResult: TurnstileResult;
+    try {
+      const verificationResponse = await fetch(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: verificationBody,
+        },
+      );
+
+      if (!verificationResponse.ok) {
+        throw new Error(`Turnstile returned ${verificationResponse.status}.`);
+      }
+
+      turnstileResult = (await verificationResponse.json()) as TurnstileResult;
+    } catch (error) {
+      console.error("Turnstile verification request failed:", error);
+      return json(
+        { message: "Human verification is temporarily unavailable." },
+        502,
+      );
+    }
+
+    const requestHostname = new URL(request.url).hostname;
+    const verifiedHostname = turnstileResult.hostname;
+    const hostnameMatches =
+      !verifiedHostname ||
+      verifiedHostname === requestHostname ||
+      verifiedHostname === "dummy-key-pass";
+    if (
+      !turnstileResult.success ||
+      !hostnameMatches
+    ) {
+      console.warn(
+        "Turnstile rejected a contact request:",
+        turnstileResult["error-codes"] ?? [],
+      );
+      return json(
+        { message: "Human verification failed. Please try again." },
+        403,
+      );
     }
 
     const apiKey = process.env.RESEND_API_KEY;
