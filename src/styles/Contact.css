@@ -86,9 +86,29 @@
   padding-top: 1.5rem;
 }
 
-.contact__bottom > div {
+.contact__bottom-links {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
+}
+
+.contact__social-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.42rem;
+}
+
+.contact__social-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  fill: currentColor;
+  transition: opacity 220ms ease;
+}
+
+.contact__social-link:hover .contact__social-icon {
+  opacity: 0.62;
 }
 
 .contact__bottom a:hover {
@@ -372,7 +392,7 @@
     margin-top: 5rem;
   }
 
-  .contact__bottom > div {
+  .contact__bottom-links {
     flex-wrap: wrap;
   }
 

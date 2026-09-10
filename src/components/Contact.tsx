@@ -220,23 +220,38 @@ export default function Contact() {
           </button>
         </div>
         <div className="container contact__bottom">
-          <p className="mono">© 2026 JM Cajes</p>
-          <div>
+          <div className="contact__bottom-links">
             <a
-              className="mono"
+              className="mono contact__social-link"
               href="https://github.com/CajesJM"
               target="_blank"
               rel="noreferrer"
             >
-              GitHub ↗
+              <svg
+                className="contact__social-icon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M12 2C6.48 2 2 6.58 2 12.23c0 4.52 2.87 8.35 6.84 9.71.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.2-3.37-1.2-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .08 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.64-1.36-2.22-.26-4.56-1.14-4.56-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.72a9.3 9.3 0 0 1 2.5.35c1.91-1.33 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.59.69.49A10.25 10.25 0 0 0 22 12.23C22 6.58 17.52 2 12 2Z" />
+              </svg>
+              <span>GitHub</span>
+              <span aria-hidden="true">↗</span>
             </a>
             <a
-              className="mono"
+              className="mono contact__social-link"
               href="https://www.linkedin.com/in/john-mark-cajes-197020422/"
               target="_blank"
               rel="noreferrer"
             >
-              LinkedIn ↗
+              <svg
+                className="contact__social-icon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M5.34 7.67A2.17 2.17 0 1 0 5.34 3.33a2.17 2.17 0 0 0 0 4.34ZM3.48 20.67H7.2V9.33H3.48v11.34ZM9.43 9.33h3.57v1.55h.05c.5-.96 1.71-1.97 3.52-1.97 3.77 0 4.46 2.48 4.46 5.7v6.06h-3.72V15.3c0-1.28-.02-2.93-1.79-2.93-1.79 0-2.06 1.4-2.06 2.84v5.46H9.43V9.33Z" />
+              </svg>
+              <span>LinkedIn</span>
+              <span aria-hidden="true">↗</span>
             </a>
             <a className="mono" href="#top">
               Back to top ↑
