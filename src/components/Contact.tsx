@@ -1,11 +1,35 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import "../styles/Contact.css";
 
 type FormStatus = "idle" | "sending" | "success" | "error";
+type ModalOrigin = { x: number; y: number; width: number; height: number };
+
+function getElementCenter(element: HTMLElement): ModalOrigin {
+  const bounds = element.getBoundingClientRect();
+  return {
+    x: bounds.left + bounds.width / 2,
+    y: bounds.top + bounds.height / 2,
+    width: bounds.width,
+    height: bounds.height,
+  };
+}
 
 export default function Contact() {
+  const reduceMotion = useReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
+  const [modalOrigin, setModalOrigin] = useState<ModalOrigin>({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  });
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [message, setMessage] = useState("");
@@ -14,8 +38,19 @@ export default function Contact() {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
 
-  function openModal() {
+  function openModal(origin?: ModalOrigin) {
     lastTriggerRef.current = document.activeElement as HTMLElement | null;
+    setModalOrigin(
+      origin ??
+        (lastTriggerRef.current
+          ? getElementCenter(lastTriggerRef.current)
+          : {
+              x: window.innerWidth / 2,
+              y: window.innerHeight / 2,
+              width: 0,
+              height: 0,
+            }),
+    );
     openedAt.current = Date.now();
     setStatus("idle");
     setErrorMessage("");
@@ -28,9 +63,25 @@ export default function Contact() {
     window.setTimeout(() => lastTriggerRef.current?.focus(), 0);
   }
 
+  const setDialogNode = useCallback(
+    (node: HTMLDivElement | null) => {
+      dialogRef.current = node;
+      if (!node) return;
+
+      const panel = node.getBoundingClientRect();
+      node.style.transformOrigin = `${modalOrigin.x - panel.left}px ${modalOrigin.y - panel.top}px`;
+    },
+    [modalOrigin],
+  );
+
   useEffect(() => {
-    window.addEventListener("open-contact-modal", openModal);
-    return () => window.removeEventListener("open-contact-modal", openModal);
+    function handleOpenModal(event: Event) {
+      openModal((event as CustomEvent<ModalOrigin>).detail);
+    }
+
+    window.addEventListener("open-contact-modal", handleOpenModal);
+    return () =>
+      window.removeEventListener("open-contact-modal", handleOpenModal);
   }, []);
 
   useEffect(() => {
@@ -114,6 +165,16 @@ export default function Contact() {
     }
   }
 
+  const revealRadius =
+    typeof window === "undefined"
+      ? 0
+      : Math.hypot(
+          Math.max(modalOrigin.x, window.innerWidth - modalOrigin.x),
+          Math.max(modalOrigin.y, window.innerHeight - modalOrigin.y),
+        ) + 48;
+  const closedClipPath = `ellipse(${modalOrigin.width / 2}px ${modalOrigin.height / 2}px at ${modalOrigin.x}px ${modalOrigin.y}px)`;
+  const openClipPath = `ellipse(${revealRadius}px ${revealRadius}px at ${modalOrigin.x}px ${modalOrigin.y}px)`;
+
   return (
     <>
       <footer id="contact" className="contact">
@@ -135,7 +196,9 @@ export default function Contact() {
             className="contact__circle"
             type="button"
             aria-haspopup="dialog"
-            onClick={openModal}
+            onClick={(event) =>
+              openModal(getElementCenter(event.currentTarget))
+            }
           >
             <span className="mono">Start a conversation</span>
             <strong aria-hidden="true">↗</strong>
@@ -171,23 +234,53 @@ export default function Contact() {
         {isOpen && (
           <motion.div
             className="contact-modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={
+              reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, clipPath: closedClipPath }
+            }
+            animate={
+              reduceMotion
+                ? { opacity: 1 }
+                : { opacity: 1, clipPath: openClipPath }
+            }
+            exit={
+              reduceMotion
+                ? { opacity: 0 }
+                : {
+                    opacity: 0,
+                    clipPath: closedClipPath,
+                    transition: {
+                      duration: 0.46,
+                      ease: [0.4, 0, 0.2, 1],
+                    },
+                  }
+            }
+            transition={{
+              duration: reduceMotion ? 0.16 : 0.58,
+              ease: [0.16, 1, 0.3, 1],
+            }}
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) closeModal();
             }}
           >
             <motion.div
-              ref={dialogRef}
+              ref={setDialogNode}
               className="contact-modal__panel"
               role="dialog"
               aria-modal="true"
               aria-labelledby="contact-modal-title"
-              initial={{ opacity: 0, y: 28, scale: 0.98 }}
+              initial={
+                reduceMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, scale: 0.06 }
+              }
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              exit={{ opacity: 0, scale: reduceMotion ? 1 : 0.06 }}
+              transition={{
+                duration: reduceMotion ? 0.16 : 0.38,
+                ease: [0.16, 1, 0.3, 1],
+              }}
             >
               <div className="contact-modal__topbar">
                 <span className="mono">New project inquiry</span>

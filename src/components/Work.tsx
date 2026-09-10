@@ -53,7 +53,7 @@ const projects = [
     title: "TIMGAS MPC Website",
     summary:
       "An official cooperative platform combining public updates, guided membership and loan applications, and a secure manager portal for reviewing submissions and publishing content.",
-    stack: ["React", "TypeScript", "Firebase", "Zod", "Vite"],
+    stack: ["React", "TypeScript", "Firebase", "Vite"],
     image: timgasMpcImage,
     link: "https://www.timgasmpc.com",
     linkLabel: "View live project",

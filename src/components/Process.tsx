@@ -3,27 +3,27 @@ import "../styles/Process.css";
 
 const capabilities = [
   [
-    "01",
+    "I",
     "Product thinking",
     "Turning a rough idea into a focused, usable product.",
   ],
   [
-    "02",
+    "II",
     "UI/UX design",
     "Clear structure, expressive interfaces, and thoughtful interaction.",
   ],
   [
-    "03",
+    "III",
     "Frontend development",
     "Responsive React experiences built with maintainable TypeScript.",
   ],
   [
-    "04",
+    "IV",
     "Backend development",
     "APIs, databases, authentication, and server-side logic built for reliable applications.",
   ],
   [
-    "05",
+    "V",
     "Mobile development",
     "Cross-platform experiences with Flutter, React Native and Expo.",
   ],

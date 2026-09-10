@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import "../styles/Nav.css";
 
@@ -22,8 +26,18 @@ export default function Nav() {
       : "paper";
   });
 
-  function openContactModal() {
-    window.dispatchEvent(new Event("open-contact-modal"));
+  function openContactModal(event: ReactMouseEvent<HTMLButtonElement>) {
+    const trigger = event.currentTarget.getBoundingClientRect();
+    window.dispatchEvent(
+      new CustomEvent("open-contact-modal", {
+        detail: {
+          x: trigger.left + trigger.width / 2,
+          y: trigger.top + trigger.height / 2,
+          width: trigger.width,
+          height: trigger.height,
+        },
+      }),
+    );
   }
 
   async function toggleTheme(origin: { x: number; y: number }) {

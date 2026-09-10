@@ -102,6 +102,7 @@
   padding: 2rem;
   background: rgba(17, 17, 15, 0.72);
   backdrop-filter: blur(12px);
+  will-change: clip-path, opacity;
 }
 
 .contact-modal__panel {
