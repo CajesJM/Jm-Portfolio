@@ -10,8 +10,8 @@ import {
 } from "framer-motion";
 import tmcImage from "../assets/Projects/TMC_Connect.webp";
 import wipeitgoodImage from "../assets/Projects/wipeitgoodtrading.webp";
-import ojtLogbookImage from "../assets/Projects/OJT-Logbook.webp";
-import timgasMpcImage from "../assets/Projects/TIMGASMPC.webp";
+import ojtLogbookImage from "../assets/Projects/OJT_Logbook.webp";
+import timgasMpcImage from "../assets/Projects/TIMGAS_MPC.webp";
 import "../styles/Work.css";
 
 const projects = [
@@ -26,7 +26,22 @@ const projects = [
     outcome:
       "Faster attendance without the long lines, just scan, verify, and go.",
     stack: ["React Native", "TypeScript", "Firebase", "Expo"],
-    callouts: ["Unified dashboard", "Mobile check-in"],
+    callouts: [
+      {
+        label: "Admin analytics",
+        labelX: 78,
+        labelY: 10,
+        targetX: 52,
+        targetY: 42,
+      },
+      {
+        label: "Mobile app dashboard",
+        labelX: 78,
+        labelY: 80,
+        targetX: 74,
+        targetY: 73,
+      },
+    ],
     image: tmcImage,
     link: "https://cajes-jm-tmc-connect.vercel.app/",
     linkLabel: "View live project",
@@ -37,11 +52,27 @@ const projects = [
     title: "Wipe It Good Trading",
     summary:
       "An online ordering platform where customers can browse products, place orders, and track purchases while administrators manage inventory and fulfillment.",
-    challenge: "Ordering and fulfillment were split across manual channels.",
-    role: "Full-stack development · Commerce UX · API design",
+    challenge:
+      "Customers may experience delays while waiting for seller responses and have limited ability to track their orders.",
+    role: "Full-stack dev · Commerce UX · API design",
     outcome: "A clearer path from product discovery to order fulfillment.",
     stack: ["React", "Vite", "TypeScript", "Node.js", "Express"],
-    callouts: ["Product ordering", "Admin fulfillment"],
+    callouts: [
+      {
+        label: "Product discovery",
+        labelX: 78,
+        labelY: 10,
+        targetX: 37,
+        targetY: 34,
+      },
+      {
+        label: "Responsive storefront",
+        labelX: 78,
+        labelY: 80,
+        targetX: 80,
+        targetY: 55,
+      },
+    ],
     image: wipeitgoodImage,
     link: "https://wipeitgoodtrading.vercel.app/",
     linkLabel: "View live project",
@@ -51,14 +82,29 @@ const projects = [
     type: "Responsive Web Application",
     title: "OJT Logbook Attendance",
     summary:
-      "An offline-ready training logbook for tracking attendance, documenting progress, and exporting records for easier student submission and review.",
+      "A digital logbook for tracking OJT attendance and generating reports for easier student submission and review.",
     challenge:
-      "Training records became fragmented when connectivity was limited.",
-    role: "Product UI · Offline data architecture · Frontend",
+      "Students often struggle to track their OJT attendance and prepare their logbooks for submission. A digital OJT logbook makes it easier to monitor attendance and generate a ready-to-print format.",
+    role: "Full-stack dev · Product UI · UI/UX · Offline data architecture",
     outcome:
       "Reliable attendance, progress records, and submission-ready exports.",
     stack: ["React", "TypeScript", "IndexedDB", "PDF/DOCX"],
-    callouts: ["Offline records", "Export workflow"],
+    callouts: [
+      {
+        label: "Dashboard attendance analytics",
+        labelX: 78,
+        labelY: 10,
+        targetX: 35,
+        targetY: 49,
+      },
+      {
+        label: "Landing page",
+        labelX: 78,
+        labelY: 80,
+        targetX: 62,
+        targetY: 78,
+      },
+    ],
     image: ojtLogbookImage,
     link: "https://ojtlogdance.vercel.app/",
     linkLabel: "View live project",
@@ -70,11 +116,26 @@ const projects = [
     summary:
       "An official cooperative platform combining public updates, guided membership and loan applications, and a secure manager portal for reviewing submissions and publishing content.",
     challenge:
-      "Public information and applications lived in disconnected workflows.",
-    role: "Full-stack development · Content systems · Product UI",
+      "The organization has no public website for online access to its services. Members need a convenient way to access information and apply for membership and loans online.",
+    role: "Full-stack dev · UI/UX · Content strategy · API design",
     outcome: "One trusted public site with a secure staff review workflow.",
     stack: ["React", "TypeScript", "Firebase", "Vite"],
-    callouts: ["Guided applications", "Manager portal"],
+    callouts: [
+      {
+        label: "Desktop homepage",
+        labelX: 78,
+        labelY: 10,
+        targetX: 31,
+        targetY: 46,
+      },
+      {
+        label: "Mobile homepage",
+        labelX: 78,
+        labelY: 80,
+        targetX: 74,
+        targetY: 55,
+      },
+    ],
     image: timgasMpcImage,
     link: "https://www.timgasmpc.com",
     linkLabel: "View live project",
@@ -388,19 +449,44 @@ function ProjectFrame({
           alt={`${project.title} interface preview`}
           loading={index === 0 ? "eager" : "lazy"}
         />
-        <span
-          className="work__callout work__callout--primary"
-          aria-hidden="true"
-        >
-          <b className="mono">01</b>
-          <em className="mono">{project.callouts[0]}</em>
-        </span>
-        <span
-          className="work__callout work__callout--secondary"
-          aria-hidden="true"
-        >
-          <b className="mono">02</b>
-          <em className="mono">{project.callouts[1]}</em>
+        <span className="work__callout-layer" aria-hidden="true">
+          <svg className="work__callout-lines">
+            {project.callouts.map((callout) => (
+              <g key={callout.label}>
+                <line
+                  className="work__callout-halo"
+                  x1={`${callout.targetX}%`}
+                  y1={`${callout.targetY}%`}
+                  x2={`${callout.labelX}%`}
+                  y2={`${callout.labelY + 3}%`}
+                />
+                <line
+                  x1={`${callout.targetX}%`}
+                  y1={`${callout.targetY}%`}
+                  x2={`${callout.labelX}%`}
+                  y2={`${callout.labelY + 3}%`}
+                />
+                <circle
+                  cx={`${callout.targetX}%`}
+                  cy={`${callout.targetY}%`}
+                  r="4"
+                />
+              </g>
+            ))}
+          </svg>
+          {project.callouts.map((callout, calloutIndex) => (
+            <span
+              className="work__callout"
+              style={{
+                left: `${callout.labelX}%`,
+                top: `${callout.labelY}%`,
+              }}
+              key={callout.label}
+            >
+              <b className="mono">0{calloutIndex + 1}</b>
+              <em className="mono">{callout.label}</em>
+            </span>
+          ))}
         </span>
         <span className="work__frame-arrow" aria-hidden="true">
           ↗

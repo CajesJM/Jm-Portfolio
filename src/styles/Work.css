@@ -424,27 +424,48 @@
   filter: grayscale(0.22) contrast(1);
 }
 
-.work__callout {
+.work__callout-layer {
   position: absolute;
   z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: #11110f;
-  filter: drop-shadow(0 1px 0 rgba(245, 244, 239, 0.7));
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
-.work__callout::before {
+.work__callout-lines {
   position: absolute;
-  right: calc(100% - 1px);
-  bottom: 50%;
-  width: clamp(42px, 5vw, 76px);
-  height: 1px;
-  background: currentColor;
-  content: "";
-  transform: rotate(-38deg);
-  transform-origin: right center;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.work__callout-lines line {
+  stroke: rgba(17, 17, 15, 0.92);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.work__callout-lines .work__callout-halo {
+  stroke: rgba(245, 244, 239, 0.86);
+  stroke-width: 3;
+}
+
+.work__callout-lines circle {
+  fill: #f5f4ef;
+  stroke: #11110f;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.work__callout {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #11110f;
+  filter: drop-shadow(0 1px 0 rgba(245, 244, 239, 0.5));
+  translate: 0 -50%;
 }
 
 .work__callout b {
@@ -460,7 +481,7 @@
 }
 
 .work__callout em {
-  max-width: 18ch;
+  width: clamp(88px, 7.5vw, 122px);
   padding: 0.3rem 0.4rem;
   background: rgba(245, 244, 239, 0.9);
   font-size: 0.5rem;
@@ -468,20 +489,6 @@
   letter-spacing: 0.05em;
   line-height: 1.35;
   text-transform: uppercase;
-}
-
-.work__callout--primary {
-  top: 8%;
-  right: 2.5%;
-}
-
-.work__callout--secondary {
-  right: 2.5%;
-  bottom: 7%;
-}
-
-.work__callout--secondary::before {
-  transform: rotate(38deg);
 }
 
 .work__frame-arrow {
