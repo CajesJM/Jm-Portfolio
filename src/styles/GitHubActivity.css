@@ -1,7 +1,113 @@
 .activity {
+  --activity-handle-height: clamp(64px, 10svh, 96px);
+  --activity-rail-height: clamp(112px, 16svh, 168px);
+  position: relative;
+  z-index: 5;
   padding: clamp(6rem, 10vw, 9rem) 0;
   color: var(--paper);
   background: var(--ink);
+}
+
+.activity__pull-handle,
+.activity__rail {
+  display: none;
+}
+
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .activity {
+    margin-top: -40svh;
+  }
+
+  .activity__pull-handle {
+    position: absolute;
+    top: calc(0px - var(--activity-handle-height));
+    right: 0;
+    left: 0;
+    display: flex;
+    height: var(--activity-handle-height);
+    align-items: center;
+    gap: 1rem;
+    padding-inline: max(24px, calc((100vw - var(--container)) / 2));
+    color: var(--paper);
+    background: var(--ink);
+  }
+
+  .activity__pull-handle span {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .activity__pull-handle i {
+    height: 1px;
+    flex: 1;
+    background: var(--line-dark);
+  }
+
+  .activity__rail {
+    position: absolute;
+    top: calc(
+      0px - var(--activity-handle-height) - var(--activity-rail-height)
+    );
+    right: 0;
+    left: 0;
+    display: block;
+    height: calc(var(--activity-rail-height) + 2px);
+    background-color: var(--ink);
+    background-image:
+      linear-gradient(var(--line-dark), var(--line-dark)),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 23px,
+        var(--line-dark) 23px,
+        var(--line-dark) 24px
+      );
+    background-position:
+      center 24%,
+      center 76%;
+    background-repeat: no-repeat;
+    background-size:
+      1px 47%,
+      min(42vw, 560px) 1px;
+    clip-path: polygon(
+      0 84%,
+      13% 84%,
+      13% 78%,
+      34% 78%,
+      34% 68%,
+      44% 68%,
+      47% 20%,
+      53% 20%,
+      56% 68%,
+      66% 68%,
+      66% 78%,
+      87% 78%,
+      87% 84%,
+      100% 84%,
+      100% 100%,
+      0 100%
+    );
+    filter: drop-shadow(
+      0 -1px 0 color-mix(in srgb, var(--paper) 42%, transparent)
+    );
+    pointer-events: none;
+    transform-origin: bottom center;
+    will-change: transform, opacity;
+  }
+
+  .activity__rail::after {
+    position: absolute;
+    right: 2.5%;
+    bottom: 9px;
+    left: 2.5%;
+    height: 1px;
+    background: var(--line-dark);
+    content: "";
+  }
+
+  .activity__header-label {
+    display: none;
+  }
 }
 
 .activity__header {

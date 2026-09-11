@@ -1,5 +1,5 @@
-import { useEffect, useState, type CSSProperties } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import "../styles/GitHubActivity.css";
 
 type ContributionDay = {
@@ -29,8 +29,16 @@ const levelNames: Record<string, string> = {
 };
 
 export default function GitHubActivity() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [data, setData] = useState<ActivityData | null>(null);
   const [state, setState] = useState<LoadState>("loading");
+  const { scrollYProgress: entranceProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "start 58%"],
+  });
+  const railY = useTransform(entranceProgress, [0, 1], [96, 0]);
+  const railScaleY = useTransform(entranceProgress, [0, 1], [0.12, 1]);
+  const railOpacity = useTransform(entranceProgress, [0, 0.12, 1], [0, 1, 1]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -58,7 +66,16 @@ export default function GitHubActivity() {
   }, []);
 
   return (
-    <section id="activity" className="activity">
+    <section ref={sectionRef} id="activity" className="activity">
+      <div className="activity__pull-handle">
+        <span className="eyebrow">Build log / Live from GitHub</span>
+        <i aria-hidden="true" />
+      </div>
+      <motion.div
+        className="activity__rail"
+        style={{ y: railY, scaleY: railScaleY, opacity: railOpacity }}
+        aria-hidden="true"
+      />
       <div className="container">
         <div className="activity__header">
           <motion.div
@@ -66,7 +83,9 @@ export default function GitHubActivity() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
           >
-            <span className="eyebrow">Build log / Live from GitHub</span>
+            <span className="eyebrow activity__header-label">
+              Build log / Live from GitHub
+            </span>
             <h2 className="section-heading">A year of building.</h2>
           </motion.div>
           <motion.p
