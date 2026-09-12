@@ -331,6 +331,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
   transition:
     color 220ms ease,
     background 220ms ease;
@@ -348,6 +349,11 @@
 
 .contact-form__submit.is-sending {
   cursor: wait;
+}
+
+.contact-form__submit.is-cooling {
+  min-width: 190px;
+  opacity: 0.68;
 }
 
 .contact-modal__success {
@@ -373,6 +379,14 @@
 
 .contact-modal__success .contact-form__submit {
   margin-top: 2rem;
+}
+
+.contact-modal__success .contact-modal__cooldown {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
 }
 
 @media (max-width: 760px) {

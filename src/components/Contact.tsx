@@ -11,6 +11,20 @@ import "../styles/Contact.css";
 
 type FormStatus = "idle" | "sending" | "success" | "error";
 type ModalOrigin = { x: number; y: number; width: number; height: number };
+type ContactResponse = {
+  message?: string;
+  cooldownSeconds?: number;
+  retryAfter?: number;
+};
+
+const CONTACT_COOLDOWN_STORAGE_KEY = "jm-contact-cooldown-until";
+const DEFAULT_CONTACT_COOLDOWN_SECONDS = 5 * 60;
+
+function formatCooldown(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
 
 function getElementCenter(element: HTMLElement): ModalOrigin {
   const bounds = element.getBoundingClientRect();
@@ -36,10 +50,25 @@ export default function Contact() {
   const [message, setMessage] = useState("");
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaResetKey, setCaptchaResetKey] = useState(0);
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
   const openedAt = useRef(Date.now());
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
+
+  function beginCooldown(seconds: number) {
+    const safeSeconds = Math.max(1, Math.ceil(seconds));
+    const cooldownUntil = Date.now() + safeSeconds * 1000;
+    setCooldownRemaining(safeSeconds);
+    try {
+      window.localStorage.setItem(
+        CONTACT_COOLDOWN_STORAGE_KEY,
+        String(cooldownUntil),
+      );
+    } catch {
+      // Server-side enforcement remains authoritative if storage is unavailable.
+    }
+  }
 
   function openModal(origin?: ModalOrigin) {
     lastTriggerRef.current = document.activeElement as HTMLElement | null;
@@ -78,6 +107,33 @@ export default function Contact() {
     },
     [modalOrigin],
   );
+
+  useEffect(() => {
+    function syncCooldown() {
+      try {
+        const storedUntil = Number(
+          window.localStorage.getItem(CONTACT_COOLDOWN_STORAGE_KEY),
+        );
+        const remaining = Number.isFinite(storedUntil)
+          ? Math.max(0, Math.ceil((storedUntil - Date.now()) / 1000))
+          : 0;
+        setCooldownRemaining(remaining);
+        if (remaining === 0) {
+          window.localStorage.removeItem(CONTACT_COOLDOWN_STORAGE_KEY);
+        }
+      } catch {
+        setCooldownRemaining(0);
+      }
+    }
+
+    syncCooldown();
+    const timer = window.setInterval(syncCooldown, 1000);
+    window.addEventListener("storage", syncCooldown);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("storage", syncCooldown);
+    };
+  }, []);
 
   useEffect(() => {
     function handleOpenModal(event: Event) {
@@ -133,6 +189,14 @@ export default function Contact() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (cooldownRemaining > 0) {
+      setStatus("error");
+      setErrorMessage(
+        `Please wait ${formatCooldown(cooldownRemaining)} before sending another message.`,
+      );
+      return;
+    }
+
     if (!captchaToken) {
       setStatus("error");
       setErrorMessage("Please complete the human verification first.");
@@ -159,12 +223,18 @@ export default function Contact() {
         }),
       });
 
-      const result = (await response.json()) as { message?: string };
+      const result = (await response.json()) as ContactResponse;
 
       if (!response.ok) {
+        if (response.status === 429 && result.retryAfter) {
+          beginCooldown(result.retryAfter);
+        }
         throw new Error(result.message || "Your message could not be sent.");
       }
 
+      beginCooldown(
+        result.cooldownSeconds ?? DEFAULT_CONTACT_COOLDOWN_SECONDS,
+      );
       form.reset();
       setMessage("");
       setStatus("success");
@@ -336,6 +406,15 @@ export default function Contact() {
                   <p>
                     I’ll read your message and reply to the email you provided.
                   </p>
+                  {cooldownRemaining > 0 && (
+                    <p
+                      className="contact-modal__cooldown mono"
+                      aria-live="polite"
+                    >
+                      Another message can be sent in{" "}
+                      {formatCooldown(cooldownRemaining)}
+                    </p>
+                  )}
                   <button
                     className="contact-form__submit"
                     type="button"
@@ -433,16 +512,26 @@ export default function Contact() {
                       >
                         {status === "error"
                           ? errorMessage
+                          : cooldownRemaining > 0
+                            ? `Another message can be sent in ${formatCooldown(cooldownRemaining)}.`
                           : captchaToken
                             ? "Verified. Your details are used only to respond to this inquiry."
                             : "Complete the verification before sending."}
                       </p>
                       <button
-                        className={`contact-form__submit ${status === "sending" ? "is-sending" : ""}`}
+                        className={`contact-form__submit ${status === "sending" ? "is-sending" : ""} ${cooldownRemaining > 0 ? "is-cooling" : ""}`}
                         type="submit"
-                        disabled={status === "sending" || !captchaToken}
+                        disabled={
+                          status === "sending" ||
+                          !captchaToken ||
+                          cooldownRemaining > 0
+                        }
                       >
-                        {status === "sending" ? "Sending…" : "Send message ↗"}
+                        {status === "sending"
+                          ? "Sending…"
+                          : cooldownRemaining > 0
+                            ? `Send again in ${formatCooldown(cooldownRemaining)}`
+                            : "Send message ↗"}
                       </button>
                     </div>
                   </form>

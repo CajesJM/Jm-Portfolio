@@ -1,5 +1,7 @@
 const MAX_MESSAGE_LENGTH = 1000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CONTACT_COOLDOWN_SECONDS = 5 * 60;
+const CONTACT_COOLDOWN_PREFIX = "contact:cooldown:";
 
 type ContactPayload = {
   name?: unknown;
@@ -16,12 +18,22 @@ type TurnstileResult = {
   "error-codes"?: string[];
 };
 
-function json(data: object, status = 200) {
+type RedisResponse = {
+  result?: unknown;
+  error?: string;
+};
+
+function json(
+  data: object,
+  status = 200,
+  additionalHeaders: Record<string, string> = {},
+) {
   return Response.json(data, {
     status,
     headers: {
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
+      ...additionalHeaders,
     },
   });
 }
@@ -33,6 +45,84 @@ function cleanSingleLine(value: unknown, maxLength: number) {
         .trim()
         .slice(0, maxLength)
     : "";
+}
+
+function getRedisConfig() {
+  const url =
+    process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token =
+    process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+
+  return url && token ? { url: url.replace(/\/$/, ""), token } : null;
+}
+
+async function redisCommand(
+  config: { url: string; token: string },
+  command: Array<string | number>,
+) {
+  const response = await fetch(config.url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${config.token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(command),
+  });
+  const payload = (await response.json()) as RedisResponse;
+
+  if (!response.ok || payload.error) {
+    throw new Error(payload.error || `Redis returned ${response.status}.`);
+  }
+
+  return payload.result;
+}
+
+async function createVisitorKey(request: Request, salt: string) {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const visitorIp = forwardedFor?.split(",")[0]?.trim() || "unknown-ip";
+  const userAgent = cleanSingleLine(
+    request.headers.get("user-agent") || "unknown-agent",
+    240,
+  );
+  const source = new TextEncoder().encode(`${salt}|${visitorIp}|${userAgent}`);
+  const digest = await crypto.subtle.digest("SHA-256", source);
+
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
+}
+
+async function reserveCooldown(
+  config: { url: string; token: string },
+  visitorKey: string,
+) {
+  const key = `${CONTACT_COOLDOWN_PREFIX}${visitorKey}`;
+  const result = await redisCommand(config, [
+    "SET",
+    key,
+    String(Date.now()),
+    "EX",
+    CONTACT_COOLDOWN_SECONDS,
+    "NX",
+  ]);
+
+  if (result === "OK") return { allowed: true, key, retryAfter: 0 };
+
+  const ttl = await redisCommand(config, ["TTL", key]);
+  const retryAfter =
+    typeof ttl === "number" && ttl > 0 ? ttl : CONTACT_COOLDOWN_SECONDS;
+  return { allowed: false, key, retryAfter };
+}
+
+async function releaseCooldown(
+  config: { url: string; token: string },
+  key: string,
+) {
+  try {
+    await redisCommand(config, ["DEL", key]);
+  } catch (error) {
+    console.error("Could not release contact cooldown:", error);
+  }
 }
 
 export default {
@@ -160,38 +250,67 @@ export default {
       );
     }
 
-    const emailResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "Idempotency-Key": crypto.randomUUID(),
-        "User-Agent": "jm-cajes-portfolio/1.0",
-      },
-      body: JSON.stringify({
-        from: sender,
-        to: [recipient],
-        reply_to: email,
-        subject: `Portfolio inquiry from ${name}`,
-        text: [
-          "New portfolio inquiry",
-          "",
-          `Name: ${name}`,
-          `Email: ${email}`,
-          "",
-          "Message:",
-          message,
-        ].join("\n"),
-      }),
-    });
-
-    if (!emailResponse.ok) {
-      const providerMessage = await emailResponse.text();
-      console.error(
-        "Resend rejected the contact email:",
-        emailResponse.status,
-        providerMessage,
+    const redisConfig = getRedisConfig();
+    if (!redisConfig) {
+      console.error("Persistent contact rate limiting is not configured.");
+      return json(
+        { message: "Message protection is temporarily unavailable." },
+        503,
       );
+    }
+
+    let cooldown: Awaited<ReturnType<typeof reserveCooldown>>;
+    try {
+      const visitorKey = await createVisitorKey(request, turnstileSecret);
+      cooldown = await reserveCooldown(redisConfig, visitorKey);
+    } catch (error) {
+      console.error("Contact rate-limit check failed:", error);
+      return json(
+        { message: "Message protection is temporarily unavailable." },
+        503,
+      );
+    }
+
+    if (!cooldown.allowed) {
+      return json(
+        {
+          message: "Please wait before sending another message.",
+          retryAfter: cooldown.retryAfter,
+        },
+        429,
+        { "Retry-After": String(cooldown.retryAfter) },
+      );
+    }
+
+    let emailResponse: Response;
+    try {
+      emailResponse = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "Idempotency-Key": crypto.randomUUID(),
+          "User-Agent": "jm-cajes-portfolio/1.0",
+        },
+        body: JSON.stringify({
+          from: sender,
+          to: [recipient],
+          reply_to: email,
+          subject: `Portfolio inquiry from ${name}`,
+          text: [
+            "New portfolio inquiry",
+            "",
+            `Name: ${name}`,
+            `Email: ${email}`,
+            "",
+            "Message:",
+            message,
+          ].join("\n"),
+        }),
+      });
+    } catch (error) {
+      console.error("Resend request failed:", error);
+      await releaseCooldown(redisConfig, cooldown.key);
       return json(
         {
           message: "Your message could not be sent. Please try again shortly.",
@@ -200,6 +319,25 @@ export default {
       );
     }
 
-    return json({ message: "Message sent." });
+    if (!emailResponse.ok) {
+      const providerMessage = await emailResponse.text();
+      console.error(
+        "Resend rejected the contact email:",
+        emailResponse.status,
+        providerMessage,
+      );
+      await releaseCooldown(redisConfig, cooldown.key);
+      return json(
+        {
+          message: "Your message could not be sent. Please try again shortly.",
+        },
+        502,
+      );
+    }
+
+    return json({
+      message: "Message sent.",
+      cooldownSeconds: CONTACT_COOLDOWN_SECONDS,
+    });
   },
 };
