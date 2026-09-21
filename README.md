@@ -19,6 +19,4 @@ My work combines practical development with intentional visual design. I’m esp
 - Animated project showcase and personal moments gallery
 - Paper and ink visual themes with a custom transition
 - Live GitHub contribution activity
-- In-page résumé viewer
-- Contact form powered by Resend and protected by Cloudflare Turnstile
 - Accessible navigation, keyboard interactions, and reduced-motion support
