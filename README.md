@@ -2,7 +2,7 @@
 
 ## About me
 
-I’m an IT student at TMC who enjoys the full process of building a product: understanding the problem, planning the experience, designing the interface, developing the system, and improving it through real feedback.
+I’m an IT student at TMC who enjoys the full process of building a product: understanding the problem, planning the experience, designing the interface, developing the system, and improving it through real feedback!.
 
 My work combines practical development with intentional visual design. I’m especially interested in responsive web applications, cross-platform mobile products, backend systems, interface motion, and useful applications of AI.
 
