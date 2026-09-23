@@ -14,7 +14,7 @@
 
 .experience__header .section-heading {
   max-width: none;
-  font-size: clamp(2.8rem, 5vw, 4.8rem);
+  font-size: clamp(2.8rem, 5vw, 5.4rem);
 }
 
 .experience__header > p {
@@ -63,6 +63,21 @@
   margin-top: 0.8rem;
   color: var(--muted);
   font-size: 0.62rem;
+}
+
+@media (min-width: 1100px) {
+  .experience-item {
+    grid-template-columns:
+      clamp(120px, 9vw, 165px)
+      minmax(420px, 0.9fr)
+      minmax(0, 1.15fr);
+    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    padding-block: clamp(2rem, 3vw, 2.75rem);
+  }
+
+  .experience-item__title h3 {
+    white-space: nowrap;
+  }
 }
 
 .experience-item__details {

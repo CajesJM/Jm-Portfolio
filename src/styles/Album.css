@@ -28,7 +28,7 @@
 .album__grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-auto-rows: clamp(52px, 5.2vw, 76px);
+  grid-auto-rows: clamp(52px, 5.2vw, 96px);
   gap: clamp(0.65rem, 1.2vw, 1rem);
 }
 

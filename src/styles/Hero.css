@@ -164,7 +164,7 @@
 .hero h1 {
   max-width: 760px;
   font-family: var(--display);
-  font-size: clamp(3.25rem, 3.8vw, 4.6rem);
+  font-size: clamp(3.25rem, 3.8vw, 5.4rem);
   font-weight: 600;
   letter-spacing: -0.065em;
   line-height: 0.92;
@@ -224,7 +224,7 @@
   --rx: 0deg;
   --ry: 0deg;
   position: relative;
-  max-width: 550px;
+  max-width: clamp(550px, 31vw, 720px);
   margin-inline: auto;
   padding: 7%;
   transform: rotateX(var(--rx)) rotateY(var(--ry));

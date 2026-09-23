@@ -14,9 +14,14 @@
   --logo: "Unbounded", sans-serif;
   --body: "Manrope", sans-serif;
   --mono: "DM Mono", monospace;
-  --container: 1240px;
+  --container: clamp(1240px, 84vw, 1920px);
+  --showcase-container: clamp(1500px, 92vw, 2200px);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+
+
+
 
 :root[data-theme="ink"] {
   --ink: #f1f0eb;
@@ -126,7 +131,7 @@ ul {
   max-width: 800px;
   margin-top: 1.1rem;
   font-family: var(--display);
-  font-size: clamp(2.6rem, 6vw, 5.8rem);
+  font-size: clamp(2.6rem, 6vw, 6.4rem);
   font-weight: 600;
   letter-spacing: -0.065em;
   line-height: 0.92;
