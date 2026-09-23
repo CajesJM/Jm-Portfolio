@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
   useState,
   type MouseEvent as ReactMouseEvent,
 } from "react";
@@ -15,7 +16,9 @@ const links = [
 
 export default function Nav() {
   const reduceMotion = useReducedMotion();
+  const lastScrollY = useRef(0);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const [activeHref, setActiveHref] = useState("");
   const [themeTransitioning, setThemeTransitioning] = useState(false);
@@ -27,6 +30,7 @@ export default function Nav() {
   });
 
   function openContactModal(event: ReactMouseEvent<HTMLButtonElement>) {
+    setHidden(false);
     const trigger = event.currentTarget.getBoundingClientRect();
     window.dispatchEvent(
       new CustomEvent("open-contact-modal", {
@@ -113,9 +117,20 @@ export default function Nav() {
 
     const updateNavigation = () => {
       frame = 0;
-      setScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY.current;
 
-      const activationLine = window.scrollY + window.innerHeight * 0.32;
+      setScrolled(currentScrollY > 20);
+      if (currentScrollY <= 80 || open) {
+        setHidden(false);
+      } else if (scrollDelta > 8) {
+        setHidden(true);
+      } else if (scrollDelta < -8) {
+        setHidden(false);
+      }
+      lastScrollY.current = currentScrollY;
+
+      const activationLine = currentScrollY + window.innerHeight * 0.32;
       let currentHref = "";
 
       for (const link of links) {
@@ -127,10 +142,10 @@ export default function Nav() {
       }
 
       const reachedPageEnd =
-        window.innerHeight + window.scrollY >=
+        window.innerHeight + currentScrollY >=
         document.documentElement.scrollHeight - 2;
 
-      setActiveHref(reachedPageEnd ? links.at(-1)?.href ?? "" : currentHref);
+      setActiveHref(reachedPageEnd ? (links.at(-1)?.href ?? "") : currentHref);
     };
 
     const requestNavigationUpdate = () => {
@@ -149,16 +164,14 @@ export default function Nav() {
       window.removeEventListener("resize", requestNavigationUpdate);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [open]);
 
   return (
-    <header className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
+    <header
+      className={`nav ${scrolled ? "nav--scrolled" : ""} ${hidden && !open ? "nav--hidden" : ""}`.trim()}
+    >
       <div className="container nav__inner">
-        <a
-          className="nav__brand"
-          href="#top"
-          aria-label="JM Cajes, home"
-        >
+        <a className="nav__brand" href="#top" aria-label="JM Cajes, home">
           <span className="nav__brand-mark">JM</span>
           <span className="nav__brand-name">Cajes</span>
         </a>
@@ -172,7 +185,9 @@ export default function Nav() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  aria-current={activeHref === link.href ? "location" : undefined}
+                  aria-current={
+                    activeHref === link.href ? "location" : undefined
+                  }
                   onClick={() => setOpen(false)}
                 >
                   <span className="nav__link-label">

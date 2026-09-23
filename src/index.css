@@ -19,10 +19,6 @@
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-
-
-
-
 :root[data-theme="ink"] {
   --ink: #f1f0eb;
   --paper: #11110f;
@@ -53,14 +49,23 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  transition: color 680ms var(--ease), background-color 680ms var(--ease);
+  transition:
+    color 680ms var(--ease),
+    background-color 680ms var(--ease);
 }
 
 html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
-  transition-property: color, background-color, border-color, box-shadow,
-    text-decoration-color, -webkit-text-stroke-color, transform, opacity,
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    box-shadow,
+    text-decoration-color,
+    -webkit-text-stroke-color,
+    transform,
+    opacity,
     filter !important;
   transition-duration: 680ms !important;
   transition-timing-function: var(--ease) !important;
@@ -149,7 +154,10 @@ ul {
   font-size: 0.72rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  transition: color 250ms ease, background 250ms ease, transform 250ms var(--ease);
+  transition:
+    color 250ms ease,
+    background 250ms ease,
+    transform 250ms var(--ease);
 }
 
 .button:hover {

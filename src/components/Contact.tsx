@@ -232,9 +232,7 @@ export default function Contact() {
         throw new Error(result.message || "Your message could not be sent.");
       }
 
-      beginCooldown(
-        result.cooldownSeconds ?? DEFAULT_CONTACT_COOLDOWN_SECONDS,
-      );
+      beginCooldown(result.cooldownSeconds ?? DEFAULT_CONTACT_COOLDOWN_SECONDS);
       form.reset();
       setMessage("");
       setStatus("success");
@@ -514,9 +512,9 @@ export default function Contact() {
                           ? errorMessage
                           : cooldownRemaining > 0
                             ? `Another message can be sent in ${formatCooldown(cooldownRemaining)}.`
-                          : captchaToken
-                            ? "Verified. Your details are used only to respond to this inquiry."
-                            : "Complete the verification before sending."}
+                            : captchaToken
+                              ? "Verified. Your details are used only to respond to this inquiry."
+                              : "Complete the verification before sending."}
                       </p>
                       <button
                         className={`contact-form__submit ${status === "sending" ? "is-sending" : ""} ${cooldownRemaining > 0 ? "is-cooling" : ""}`}

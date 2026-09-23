@@ -5,8 +5,14 @@
   right: 0;
   left: 0;
   transition:
+    transform 420ms var(--ease),
     background 250ms ease,
     border-color 250ms ease;
+  will-change: transform;
+}
+
+.nav--hidden:not(:focus-within) {
+  transform: translateY(calc(-100% - 1px));
 }
 
 .nav--scrolled {
@@ -443,6 +449,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition:
+      background 250ms ease,
+      border-color 250ms ease;
+  }
+
   .nav__availability-signal::before,
   .nav__availability-signal i {
     animation: none;

@@ -106,9 +106,7 @@ export default function TurnstileWidget({
         widgetId = turnstile.render(containerRef.current, {
           sitekey: siteKey,
           theme:
-            document.documentElement.dataset.theme === "ink"
-              ? "dark"
-              : "light",
+            document.documentElement.dataset.theme === "ink" ? "dark" : "light",
           size: "flexible",
           appearance: "always",
           callback: (token) => {

@@ -47,8 +47,7 @@ export default function Hero() {
   const visualRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const [typedLength, setTypedLength] = useState(0);
-  const [greetingPhase, setGreetingPhase] =
-    useState<GreetingPhase>("typing");
+  const [greetingPhase, setGreetingPhase] = useState<GreetingPhase>("typing");
 
   useEffect(() => {
     if (reduceMotion) {
@@ -164,8 +163,8 @@ export default function Hero() {
             }}
           >
             <span>Full-stack developer</span>
-            <span>focused on practical,</span>
-            <em>well-built software.</em>
+            <span>building practical web,</span>
+            <em> and mobile systems.</em>
           </motion.h1>
           <motion.div
             className="hero__footer"
@@ -255,7 +254,10 @@ export default function Hero() {
                     }}
                   >
                     <div className="hero__capability-card">
-                      <span className="hero__capability-icons" aria-hidden="true">
+                      <span
+                        className="hero__capability-icons"
+                        aria-hidden="true"
+                      >
                         <CapabilityIcon kind={capability.kind} />
                         <i>{capability.code}</i>
                       </span>

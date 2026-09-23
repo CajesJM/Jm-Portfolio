@@ -48,7 +48,9 @@
   gap: 1.5rem;
   border-bottom: 1px solid var(--line-dark);
   padding-block: 1.8rem;
-  transition: padding 300ms var(--ease), background 300ms ease;
+  transition:
+    padding 300ms var(--ease),
+    background 300ms ease;
 }
 
 .capability:hover {
@@ -103,7 +105,9 @@
 }
 
 @keyframes processMarquee {
-  to { transform: translateX(-50%); }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @media (max-width: 760px) {

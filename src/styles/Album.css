@@ -89,7 +89,9 @@
   height: 100%;
   object-fit: cover;
   filter: grayscale(1) contrast(0.98);
-  transition: filter 600ms ease, transform 800ms var(--ease);
+  transition:
+    filter 600ms ease,
+    transform 800ms var(--ease);
 }
 
 .album-card--team img,
@@ -140,7 +142,10 @@
   border-radius: 50%;
   place-items: center;
   font-size: 0.8rem;
-  transition: color 250ms ease, background 250ms ease, transform 350ms var(--ease);
+  transition:
+    color 250ms ease,
+    background 250ms ease,
+    transform 350ms var(--ease);
 }
 
 .album-card__button:hover .album-card__open,
@@ -288,7 +293,9 @@
   background: transparent;
   place-items: center;
   cursor: pointer;
-  transition: color 250ms ease, background 250ms ease;
+  transition:
+    color 250ms ease,
+    background 250ms ease;
 }
 
 .album-viewer__arrow:hover {

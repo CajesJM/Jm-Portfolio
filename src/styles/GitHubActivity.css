@@ -15,7 +15,7 @@
 
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
   .activity {
-    margin-top: calc(var(--activity-handle-height) + var(--activity-rail-height));
+    margin-top: calc(var(--activity-handle-height) + clamp(40px, 6svh, 64px));
   }
 
   .activity__pull-handle {
