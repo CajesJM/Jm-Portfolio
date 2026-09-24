@@ -6,6 +6,7 @@ import Experience from "./components/Experience";
 import Process from "./components/Process";
 import Album from "./components/Album";
 import Contact from "./components/Contact";
+import CrowMascot from "./components/CrowMascot";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Process />
         <Album />
       </main>
+      <CrowMascot />
       <Contact />
     </>
   );
