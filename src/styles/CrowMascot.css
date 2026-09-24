@@ -1,0 +1,1278 @@
+.corvus {
+  --flight-start-x: -72vw;
+  --flight-start-y: -72vh;
+  --flight-curve-x: -36vw;
+  --flight-curve-y: -56vh;
+  --flight-approach-x: -8vw;
+  --flight-approach-y: -24px;
+  --walk-start-x: 48px;
+  position: fixed;
+  z-index: 90;
+  right: clamp(14px, 2.2vw, 42px);
+  bottom: max(18px, env(safe-area-inset-bottom));
+  width: clamp(286px, 21vw, 356px);
+  height: clamp(190px, 15vw, 238px);
+  color: var(--ink);
+  isolation: isolate;
+  pointer-events: none;
+}
+
+.corvus__trigger {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.corvus__bird {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  display: block;
+  width: clamp(178px, 13vw, 232px);
+  isolation: isolate;
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  transform: scaleX(-1);
+}
+
+.corvus--return-dragging {
+  cursor: grabbing;
+  user-select: none;
+  will-change: transform;
+}
+
+.corvus--return-dragging .corvus__bird {
+  cursor: grabbing;
+}
+
+.corvus__bird::after {
+  position: absolute;
+  z-index: -1;
+  right: 9%;
+  bottom: 3%;
+  width: 68%;
+  height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--ink) 24%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 10%, transparent) 48%,
+    transparent 76%
+  );
+  content: "";
+  opacity: 0.82;
+  pointer-events: none;
+  transform: scaleX(1);
+  transform-origin: center;
+}
+
+.corvus__bird img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 15px 13px rgba(17, 17, 15, 0.18));
+  transform: translate3d(var(--look-x, 0), var(--look-y, 0), 0);
+  transform-origin: 58% 78%;
+  transition:
+    transform 280ms var(--ease),
+    filter 280ms ease;
+}
+
+.corvus__rail {
+  position: absolute;
+  z-index: 3;
+  right: clamp(116px, 8vw, 148px);
+  bottom: clamp(130px, 10vw, 158px);
+  display: grid;
+  width: max-content;
+  min-width: 174px;
+  min-height: 52px;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.7rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 0.48rem 0.55rem 0.48rem 0.65rem;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--ink) 18%, transparent);
+  text-align: left;
+  transition:
+    opacity 320ms ease,
+    color 240ms ease,
+    background-color 240ms ease,
+    transform 280ms var(--ease),
+    box-shadow 280ms var(--ease);
+}
+
+.corvus--entrance-flight .corvus__rail,
+.corvus--entrance-preparing .corvus__rail,
+.corvus--entrance-walking .corvus__rail {
+  opacity: 0;
+  transform: translate3d(12px, 8px, 0) scale(0.96);
+  visibility: hidden;
+}
+
+.corvus--entrance-preparing .corvus__bird {
+  opacity: 0;
+}
+
+.corvus--entrance-preparing .corvus__trigger,
+.corvus--entrance-flight .corvus__trigger,
+.corvus--entrance-walking .corvus__trigger {
+  pointer-events: none;
+}
+
+.corvus--entrance-settled .corvus__rail {
+  animation: corvusThoughtIn 420ms var(--ease);
+}
+
+.corvus__rail::before,
+.corvus__rail::after {
+  position: absolute;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  content: "";
+}
+
+.corvus__rail::before {
+  right: 12px;
+  bottom: -12px;
+  width: 10px;
+  height: 10px;
+}
+
+.corvus__rail::after {
+  right: 4px;
+  bottom: -22px;
+  width: 5px;
+  height: 5px;
+}
+
+.corvus__rail-mark {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.corvus__rail-mark::before,
+.corvus__rail-mark::after {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.corvus__rail-mark::before {
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  transform: translate(-50%, -50%);
+}
+
+.corvus__rail-mark::after {
+  top: 2px;
+  left: 7px;
+  width: 3px;
+  height: 3px;
+  box-shadow:
+    7px 8px 0 currentColor,
+    -5px 9px 0 currentColor;
+}
+
+.corvus__rail-copy {
+  display: grid;
+  line-height: 1.1;
+}
+
+.corvus__rail-copy small,
+.corvus__rail-copy strong,
+.corvus__card-meta,
+.corvus__card-action {
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.corvus__rail-copy small {
+  margin-bottom: 0.22rem;
+  font-size: 0.48rem;
+  font-weight: 400;
+  opacity: 0.62;
+}
+
+.corvus__rail-copy strong {
+  font-size: 0.64rem;
+  font-weight: 500;
+}
+
+.corvus__rail-arrow {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 0.82rem;
+  transition: transform 280ms var(--ease);
+}
+
+.corvus__trigger:hover .corvus__rail,
+.corvus__trigger:focus-visible .corvus__rail,
+.corvus--open .corvus__rail {
+  color: var(--paper);
+  background: var(--ink);
+  box-shadow: 6px 6px 0 color-mix(in srgb, var(--ink) 20%, transparent);
+  transform: translate(-2px, -2px);
+}
+
+.corvus__trigger:hover .corvus__rail::before,
+.corvus__trigger:hover .corvus__rail::after,
+.corvus__trigger:focus-visible .corvus__rail::before,
+.corvus__trigger:focus-visible .corvus__rail::after,
+.corvus--open .corvus__rail::before,
+.corvus--open .corvus__rail::after {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.corvus__trigger:hover .corvus__rail-arrow,
+.corvus__trigger:focus-visible .corvus__rail-arrow {
+  transform: translate(2px, -2px);
+}
+
+.corvus__trigger:focus-visible {
+  outline: none;
+}
+
+.corvus__trigger:focus-visible .corvus__rail {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.corvus--sleeping .corvus__rail {
+  opacity: 0;
+  transform: translate3d(10px, 8px, 0) scale(0.94);
+  transition:
+    opacity 240ms ease,
+    transform 240ms var(--ease),
+    visibility 0s linear 240ms;
+  visibility: hidden;
+}
+
+.corvus--return-dragging .corvus__rail,
+.corvus--return-flying .corvus__rail,
+.corvus--return-walking .corvus__rail {
+  opacity: 0;
+  transform: translate3d(10px, 8px, 0) scale(0.94);
+  visibility: hidden;
+}
+
+.corvus__sleep-symbols {
+  position: absolute;
+  z-index: 4;
+  right: 16%;
+  bottom: 68%;
+  width: 62px;
+  height: 58px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-weight: 600;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.corvus__sleep-symbols span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.corvus__sleep-symbols span:nth-child(2) {
+  bottom: 10px;
+  left: 15px;
+  font-size: 1.12em;
+}
+
+.corvus__sleep-symbols span:nth-child(3) {
+  bottom: 22px;
+  left: 32px;
+  font-size: 1.28em;
+}
+
+.corvus--sleeping .corvus__sleep-symbols {
+  visibility: visible;
+}
+
+.corvus--sleeping .corvus__sleep-symbols span {
+  animation: corvusSleepSymbol 2.7s ease-out infinite;
+}
+
+.corvus--sleeping .corvus__sleep-symbols span:nth-child(2) {
+  animation-delay: -1.8s;
+}
+
+.corvus--sleeping .corvus__sleep-symbols span:nth-child(3) {
+  animation-delay: -0.9s;
+}
+
+.corvus__question-mark {
+  position: absolute;
+  z-index: 4;
+  right: 18%;
+  bottom: 76%;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 10px, 0) scale(0.72) rotate(-8deg);
+  visibility: hidden;
+}
+
+.corvus__question-mark::before,
+.corvus__question-mark::after {
+  position: absolute;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  content: "";
+}
+
+.corvus__question-mark::before {
+  right: 7px;
+  bottom: -10px;
+  width: 7px;
+  height: 7px;
+}
+
+.corvus__question-mark::after {
+  right: 4px;
+  bottom: -17px;
+  width: 3px;
+  height: 3px;
+}
+
+.corvus--thinking .corvus__question-mark {
+  visibility: visible;
+  animation: corvusQuestionMark 1.45s cubic-bezier(0.22, 0.68, 0.24, 1) infinite;
+}
+
+.corvus__card {
+  position: fixed;
+  z-index: 5;
+  right: clamp(14px, 2.2vw, 42px);
+  bottom: max(252px, calc(env(safe-area-inset-bottom) + 252px));
+  display: grid;
+  width: min(460px, calc(100vw - 28px));
+  max-height: min(570px, calc(100dvh - 276px));
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  border: 1px solid var(--ink);
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px), var(--paper);
+  background-size: 24px 24px;
+  box-shadow: 8px 8px 0 var(--ink);
+  overflow: hidden;
+  animation: corvusCardIn 360ms var(--ease) both;
+  pointer-events: auto;
+}
+
+.corvus__card-meta {
+  display: flex;
+  min-height: 60px;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid var(--line-strong);
+  padding: 0 0.7rem;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  font-size: 0.54rem;
+}
+
+.corvus__card-meta button {
+  min-width: 44px;
+  min-height: 44px;
+  margin-left: 0.15rem;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.corvus__card-meta button:hover,
+.corvus__card-meta button:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.corvus__card-state {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+.corvus__profile {
+  position: relative;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border: 1px solid color-mix(in srgb, var(--ink) 52%, transparent);
+  border-radius: 50%;
+  padding: 2px;
+  background: var(--ink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 7%, transparent);
+  overflow: hidden;
+}
+
+.corvus__profile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 78% 16%;
+  transform: scale(1.85);
+  transform-origin: 78% 18%;
+}
+
+.corvus__identity {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  line-height: 1.08;
+}
+
+.corvus__identity strong {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.045em;
+}
+
+.corvus__identity small {
+  margin-top: 0.22rem;
+  color: color-mix(in srgb, var(--ink) 66%, var(--paper));
+  font-size: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.055em;
+}
+
+.corvus__transcript {
+  min-height: 0;
+  padding: 1.2rem;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--ink) transparent;
+  scrollbar-width: thin;
+}
+
+.corvus__welcome {
+  padding: 0.1rem 0 0.95rem;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.corvus__eyebrow,
+.corvus__message-author,
+.corvus__composer label,
+.corvus__composer-note,
+.corvus__thinking {
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.corvus__eyebrow {
+  color: var(--muted);
+  font-size: 0.53rem;
+}
+
+.corvus__welcome h2 {
+  margin-top: 0.55rem;
+  font-family: var(--display);
+  font-size: clamp(1.45rem, 2vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+.corvus__welcome p {
+  max-width: 36ch;
+  margin-top: 0.65rem;
+  color: color-mix(in srgb, var(--ink) 72%, var(--paper));
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.corvus__starters {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.corvus__starters button {
+  display: grid;
+  width: 100%;
+  min-height: 44px;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--line-strong);
+  padding: 0.62rem 0.72rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  font-size: 0.7rem;
+  line-height: 1.35;
+  text-align: left;
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms var(--ease);
+  cursor: pointer;
+}
+
+.corvus__starters button:hover,
+.corvus__starters button:focus-visible {
+  color: var(--paper);
+  background: var(--ink);
+  transform: translateX(2px);
+}
+
+.corvus__message {
+  width: fit-content;
+  max-width: 92%;
+  margin-top: 1.05rem;
+}
+
+.corvus__message-author {
+  display: block;
+  margin-bottom: 0.38rem;
+  color: color-mix(in srgb, var(--ink) 64%, var(--paper));
+  font-size: 0.55rem;
+}
+
+.corvus__message p {
+  margin: 0;
+  border: 1px solid var(--line-strong);
+  padding: 0.8rem 0.9rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--paper) 97%, var(--ink));
+  font-size: clamp(0.9rem, 0.84rem + 0.2vw, 1rem);
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.corvus__message--user {
+  margin-left: auto;
+}
+
+.corvus__message--user .corvus__message-author {
+  text-align: right;
+}
+
+.corvus__message--user p {
+  border-color: var(--ink);
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.corvus__message--model {
+  display: grid;
+  width: 100%;
+  max-width: 100%;
+  grid-template-columns: 32px minmax(0, 1fr);
+  align-items: start;
+  gap: 0.65rem;
+}
+
+.corvus__message--model p {
+  border-color: color-mix(in srgb, var(--ink) 24%, transparent);
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--ink) 7%, transparent);
+}
+
+.corvus__message-content {
+  min-width: 0;
+}
+
+.corvus__message-avatar {
+  width: 32px;
+  height: 32px;
+  border: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
+  border-radius: 50%;
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.corvus__message-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 78% 16%;
+  transform: scale(1.85);
+  transform-origin: 78% 18%;
+}
+
+.corvus__typed-text {
+  overflow-wrap: anywhere;
+}
+
+.corvus__typing-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.16em;
+  background: #b52722;
+  vertical-align: -0.12em;
+  animation: corvusTypingCursor 720ms steps(1, end) infinite;
+}
+
+.corvus__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.corvus__thinking {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.32rem;
+  margin-top: 0.85rem;
+  color: var(--muted);
+  font-size: 0.53rem;
+}
+
+.corvus__thinking span {
+  margin-right: 0.25rem;
+}
+
+.corvus__thinking i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: corvusThinkingDot 1s ease-in-out infinite;
+}
+
+.corvus__thinking i:nth-of-type(2) {
+  animation-delay: 120ms;
+}
+
+.corvus__thinking i:nth-of-type(3) {
+  animation-delay: 240ms;
+}
+
+.corvus__chat-error {
+  margin-top: 0.8rem;
+  border-left: 2px solid #b52722;
+  padding: 0.55rem 0.65rem;
+  color: var(--ink);
+  background: color-mix(in srgb, #b52722 8%, var(--paper));
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.corvus__composer {
+  border-top: 1px solid var(--ink);
+  padding: 0.72rem;
+  background: var(--paper);
+}
+
+.corvus__composer label {
+  display: block;
+  margin-bottom: 0.38rem;
+  font-size: 0.52rem;
+}
+
+.corvus__composer-row {
+  display: grid;
+  grid-template-columns: 1fr 44px;
+  align-items: stretch;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+.corvus__composer textarea {
+  min-width: 0;
+  min-height: 44px;
+  max-height: 112px;
+  resize: vertical;
+  border: 0;
+  padding: 0.72rem;
+  color: var(--ink);
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.corvus__composer textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.corvus__composer textarea:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.corvus__composer-row:focus-within {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.corvus__composer button {
+  display: grid;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  border: 0;
+  border-left: 1px solid var(--ink);
+  color: var(--paper);
+  background: var(--ink);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.corvus__composer button:disabled {
+  cursor: not-allowed;
+  opacity: 0.36;
+}
+
+.corvus__composer-note {
+  display: block;
+  margin-top: 0.42rem;
+  color: var(--muted);
+  font-size: 0.47rem;
+}
+
+.corvus__announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.corvus--idle.corvus--entrance-settled .corvus__bird img {
+  animation: corvusBreathe 5.8s ease-in-out infinite;
+}
+
+.corvus--idle.corvus--entrance-settled.corvus--ground-shuffle .corvus__bird {
+  animation: corvusGroundShuffle 900ms cubic-bezier(0.22, 0.68, 0.24, 1) both;
+}
+
+.corvus--idle.corvus--entrance-settled.corvus--ground-hop .corvus__bird img {
+  animation: corvusGroundHop 900ms cubic-bezier(0.22, 0.68, 0.24, 1) both;
+}
+
+.corvus--idle.corvus--entrance-settled.corvus--ground-hop .corvus__bird::after {
+  animation: corvusGroundShadowHop 900ms ease-out both;
+}
+
+.corvus--idle.corvus--entrance-settled.corvus--ground-tilt .corvus__bird img {
+  animation: corvusGroundTilt 900ms cubic-bezier(0.22, 0.68, 0.24, 1) both;
+}
+
+.corvus--idle.corvus--entrance-settled.corvus--ground-shuffle .corvus__rail {
+  transform: translate3d(-6px, 1px, 0) rotate(-0.6deg);
+}
+
+.corvus--idle.corvus--entrance-settled.corvus--ground-hop .corvus__rail {
+  transform: translate3d(0, -8px, 0) scale(1.015);
+}
+
+.corvus--idle.corvus--entrance-settled.corvus--ground-tilt .corvus__rail {
+  transform: translate3d(-3px, -4px, 0) rotate(-1.2deg);
+}
+
+.corvus--sleeping .corvus__bird img {
+  animation: corvusSleep 6.8s ease-in-out infinite;
+}
+
+.corvus--thinking .corvus__bird img {
+  animation: corvusThinkFocus 1.7s ease-in-out infinite;
+}
+
+.corvus--thinking .corvus__bird::after {
+  animation: corvusThinkShadow 1.7s ease-in-out infinite;
+}
+
+.corvus--speaking .corvus__bird img {
+  animation: corvusSpeakBody 620ms ease-in-out infinite;
+}
+
+.corvus--flight .corvus__bird {
+  animation: corvusFlightPath 2300ms linear both;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.corvus--flight .corvus__bird::after {
+  opacity: 0;
+}
+
+.corvus--flight .corvus__bird img {
+  animation: corvusFlightBody 2300ms cubic-bezier(0.22, 0.62, 0.2, 1) both;
+  backface-visibility: hidden;
+  filter: none;
+  will-change: transform, opacity;
+}
+
+.corvus--return-flying .corvus__bird img,
+.corvus--return-walking .corvus__bird img {
+  animation: none;
+  filter: none;
+  transform: none;
+  transition: none;
+}
+
+.corvus--return-flying.corvus--return-right .corvus__bird {
+  transform: none;
+}
+
+.corvus--return-flying.corvus--return-left .corvus__bird {
+  transform: scaleX(-1);
+}
+
+.corvus--return-flying .corvus__bird::after {
+  opacity: 0.3;
+  transform: scaleX(0.66);
+}
+
+.corvus--return-walking.corvus--return-left .corvus__bird {
+  transform: none;
+}
+
+.corvus--return-walking.corvus--return-right .corvus__bird {
+  transform: scaleX(-1);
+}
+
+.corvus--return-walking .corvus__bird img {
+  width: 86%;
+  margin-left: auto;
+  aspect-ratio: 1;
+}
+
+.corvus--entrance-walking .corvus__bird {
+  transform: none;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.corvus--entrance-walking .corvus__bird {
+  animation: corvusWalkToRest 1380ms linear both;
+}
+
+.corvus--entrance-walking .corvus__bird::after {
+  animation: corvusGroundShadowIn 1380ms ease-out both;
+}
+
+.corvus--entrance-walking .corvus__bird img {
+  width: 86%;
+  margin-left: auto;
+  animation: none;
+  aspect-ratio: 1;
+  filter: none;
+  transform: none;
+  transition: none;
+}
+
+@keyframes corvusBreathe {
+  0%,
+  100% {
+    transform: translate3d(var(--look-x, 0), var(--look-y, 0), 0) rotate(0);
+  }
+  50% {
+    transform: translate3d(var(--look-x, 0), calc(var(--look-y, 0px) - 2px), 0)
+      rotate(-0.35deg);
+  }
+}
+
+@keyframes corvusThinkFocus {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  42% {
+    transform: translate3d(-2px, -4px, 0) rotate(-1deg);
+  }
+
+  68% {
+    transform: translate3d(1px, -2px, 0) rotate(0.45deg);
+  }
+}
+
+@keyframes corvusQuestionMark {
+  0%,
+  100% {
+    opacity: 0.62;
+    transform: translate3d(0, 8px, 0) scale(0.82) rotate(-7deg);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translate3d(-4px, -5px, 0) scale(1) rotate(4deg);
+  }
+
+  70% {
+    opacity: 0.88;
+    transform: translate3d(2px, -2px, 0) scale(0.94) rotate(-2deg);
+  }
+}
+
+@keyframes corvusThinkShadow {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: scaleX(1);
+  }
+
+  48% {
+    opacity: 0.62;
+    transform: scaleX(0.9);
+  }
+}
+
+@keyframes corvusSpeakBody {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  50% {
+    transform: translate3d(0, -2px, 0) rotate(-0.35deg);
+  }
+}
+
+@keyframes corvusGroundShuffle {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scaleX(-1);
+  }
+  38% {
+    transform: translate3d(-7px, -1px, 0) scaleX(-1) rotate(1deg);
+  }
+  68% {
+    transform: translate3d(3px, 0, 0) scaleX(-1) rotate(-0.5deg);
+  }
+}
+
+@keyframes corvusGroundHop {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  42% {
+    transform: translate3d(0, -9px, 0) rotate(-1deg);
+  }
+  72% {
+    transform: translate3d(0, 1px, 0) rotate(0.4deg);
+  }
+}
+
+@keyframes corvusGroundShadowHop {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: scaleX(1);
+  }
+  42% {
+    opacity: 0.48;
+    transform: scaleX(0.72);
+  }
+}
+
+@keyframes corvusGroundTilt {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  35%,
+  62% {
+    transform: translate3d(-1px, -2px, 0) rotate(-2.2deg);
+  }
+}
+
+@keyframes corvusSleep {
+  0%,
+  100% {
+    transform: translateY(0) scale(0.98);
+  }
+  50% {
+    transform: translateY(2px) scale(1);
+  }
+}
+
+@keyframes corvusSleepSymbol {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 5px, 0) scale(0.72);
+  }
+  24% {
+    opacity: 0.78;
+  }
+  72% {
+    opacity: 0.62;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(9px, -18px, 0) scale(1.04);
+  }
+}
+
+@keyframes corvusFlightPath {
+  0% {
+    transform: translate3d(var(--flight-start-x), var(--flight-start-y), 0);
+  }
+  58% {
+    transform: translate3d(var(--flight-curve-x), var(--flight-curve-y), 0);
+  }
+  88% {
+    transform: translate3d(
+      var(--flight-approach-x),
+      var(--flight-approach-y),
+      0
+    );
+  }
+  100% {
+    transform: translate3d(var(--walk-start-x), 0, 0);
+  }
+}
+
+@keyframes corvusFlightBody {
+  0% {
+    opacity: 0;
+    transform: rotate(-7deg) scale(0.76);
+  }
+  12% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+    transform: rotate(2deg) scale(0.96);
+  }
+  91% {
+    opacity: 1;
+    transform: rotate(-1deg) scale(1.018, 0.972);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+@keyframes corvusWalkToRest {
+  from {
+    transform: translate3d(var(--walk-start-x), 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes corvusGroundShadowIn {
+  from {
+    opacity: 0.22;
+    transform: scaleX(0.52);
+  }
+  to {
+    opacity: 0.82;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes corvusThoughtIn {
+  from {
+    opacity: 0;
+    transform: translate3d(10px, 8px, 0) scale(0.92);
+    transform-origin: right bottom;
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    transform-origin: right bottom;
+  }
+}
+
+@keyframes corvusCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes corvusThinkingDot {
+  0%,
+  100% {
+    opacity: 0.32;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes corvusTypingCursor {
+  0%,
+  48% {
+    opacity: 1;
+  }
+  49%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 680px) {
+  .corvus {
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: 250px;
+    height: 174px;
+  }
+
+  .corvus__bird {
+    width: 158px;
+  }
+
+  .corvus__rail {
+    right: 86px;
+    bottom: 112px;
+    min-width: 154px;
+    min-height: 48px;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.5rem;
+    padding-inline: 0.55rem;
+  }
+
+  .corvus__rail-copy small {
+    display: none;
+  }
+
+  .corvus__rail-arrow {
+    width: 26px;
+    height: 26px;
+  }
+
+  .corvus__card {
+    right: 14px;
+    bottom: max(190px, calc(env(safe-area-inset-bottom) + 190px));
+    width: calc(100vw - 28px);
+    max-height: min(530px, calc(100dvh - 210px));
+  }
+
+  .corvus__composer-note {
+    display: none;
+  }
+
+  .corvus__transcript {
+    padding: 1rem;
+  }
+
+  .corvus__message p,
+  .corvus__welcome p,
+  .corvus__composer textarea {
+    font-size: 1rem;
+  }
+}
+
+@media (max-height: 620px) and (orientation: landscape) {
+  .corvus {
+    width: 224px;
+    height: 138px;
+  }
+
+  .corvus__bird {
+    width: 138px;
+  }
+
+  .corvus__card {
+    bottom: max(154px, calc(env(safe-area-inset-bottom) + 154px));
+    max-height: calc(100dvh - 174px);
+  }
+
+  .corvus__rail {
+    right: 72px;
+    bottom: 92px;
+    transform: scale(0.88);
+    transform-origin: right center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .corvus__bird img,
+  .corvus__bird,
+  .corvus__bird::after,
+  .corvus__rail,
+  .corvus__sleep-symbols span,
+  .corvus__question-mark,
+  .corvus__card,
+  .corvus__thinking i,
+  .corvus__typing-cursor {
+    animation: none !important;
+  }
+
+  .corvus--sleeping .corvus__sleep-symbols span {
+    opacity: 0.72;
+  }
+
+  .corvus--thinking .corvus__question-mark {
+    opacity: 1;
+    transform: none;
+  }
+
+  .corvus__bird img,
+  .corvus__rail,
+  .corvus__rail-arrow {
+    transition: none;
+  }
+}
