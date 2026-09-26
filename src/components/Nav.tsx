@@ -4,8 +4,29 @@ import {
   useState,
   type MouseEvent as ReactMouseEvent,
 } from "react";
+import { flushSync } from "react-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import "../styles/Nav.css";
+
+type Theme = "paper" | "ink";
+
+type ThemeViewTransition = {
+  finished: Promise<void>;
+};
+
+type ThemeViewTransitionDocument = Document & {
+  startViewTransition?: (updateCallback: () => void) => ThemeViewTransition;
+};
+
+function applyTheme(theme: Theme) {
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.style.colorScheme =
+    theme === "ink" ? "dark" : "light";
+  window.localStorage.setItem("portfolio-theme", theme);
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute("content", theme === "ink" ? "#11110f" : "#efeee8");
+}
 
 const links = [
   { href: "#work", label: "Projects" },
@@ -22,7 +43,7 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const [activeHref, setActiveHref] = useState("");
   const [themeTransitioning, setThemeTransitioning] = useState(false);
-  const [theme, setTheme] = useState<"paper" | "ink">(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === "undefined") return "paper";
     return window.localStorage.getItem("portfolio-theme") === "ink"
       ? "ink"
@@ -58,58 +79,67 @@ export default function Nav() {
     }
 
     setThemeTransitioning(true);
+    const root = document.documentElement;
     const radius = Math.hypot(
       Math.max(origin.x, window.innerWidth - origin.x),
       Math.max(origin.y, window.innerHeight - origin.y),
     );
-    const reveal = document.createElement("div");
-    reveal.className = "theme-reveal";
-    reveal.setAttribute("aria-hidden", "true");
-    reveal.style.setProperty(
-      "--reveal-color",
-      nextTheme === "ink"
-        ? "rgba(241, 240, 235, 0.5)"
-        : "rgba(17, 17, 15, 0.42)",
-    );
-    Object.assign(reveal.style, {
-      left: `${origin.x}px`,
-      top: `${origin.y}px`,
-      width: `${radius * 2}px`,
-      height: `${radius * 2}px`,
-    });
-    document.body.appendChild(reveal);
-    document.documentElement.classList.add("theme-changing");
+    const revealColor = nextTheme === "ink" ? "#11110f" : "#efeee8";
+    let fallbackReveal: HTMLDivElement | null = null;
+
+    root.style.setProperty("--theme-origin-x", `${origin.x}px`);
+    root.style.setProperty("--theme-origin-y", `${origin.y}px`);
+    root.style.setProperty("--theme-reveal-radius", `${radius}px`);
+    root.classList.add("theme-changing");
 
     try {
-      setTheme(nextTheme);
-      await reveal.animate(
-        [
-          { opacity: 0, transform: "translate(-50%, -50%) scale(0.02)" },
-          { opacity: 0.68, offset: 0.2 },
-          { opacity: 0.42, offset: 0.72 },
-          { opacity: 0, transform: "translate(-50%, -50%) scale(1)" },
-        ],
-        {
-          duration: 1100,
-          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
-          fill: "forwards",
-        },
-      ).finished;
+      const transitionDocument = document as ThemeViewTransitionDocument;
+
+      if (transitionDocument.startViewTransition) {
+        const transition = transitionDocument.startViewTransition(() => {
+          applyTheme(nextTheme);
+          flushSync(() => setTheme(nextTheme));
+        });
+        await transition.finished;
+      } else {
+        fallbackReveal = document.createElement("div");
+        fallbackReveal.className = "theme-reveal";
+        fallbackReveal.setAttribute("aria-hidden", "true");
+        fallbackReveal.style.setProperty("--reveal-color", revealColor);
+        document.body.appendChild(fallbackReveal);
+
+        applyTheme(nextTheme);
+        flushSync(() => setTheme(nextTheme));
+        await fallbackReveal.animate(
+          [
+            {
+              clipPath: `circle(0 at ${origin.x}px ${origin.y}px)`,
+              opacity: 0.5,
+            },
+            {
+              clipPath: `circle(${radius}px at ${origin.x}px ${origin.y}px)`,
+              opacity: 0,
+            },
+          ],
+          {
+            duration: 680,
+            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+            fill: "forwards",
+          },
+        ).finished;
+      }
     } finally {
-      reveal.remove();
-      document.documentElement.classList.remove("theme-changing");
+      fallbackReveal?.remove();
+      root.classList.remove("theme-changing");
+      root.style.removeProperty("--theme-origin-x");
+      root.style.removeProperty("--theme-origin-y");
+      root.style.removeProperty("--theme-reveal-radius");
       setThemeTransitioning(false);
     }
   }
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme =
-      theme === "ink" ? "dark" : "light";
-    window.localStorage.setItem("portfolio-theme", theme);
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", theme === "ink" ? "#11110f" : "#efeee8");
+    applyTheme(theme);
   }, [theme]);
 
   useEffect(() => {

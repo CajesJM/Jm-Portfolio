@@ -160,29 +160,42 @@
 .theme-reveal {
   position: fixed;
   z-index: 1000;
-  border: 2px solid var(--reveal-color);
-  border-radius: 50%;
-  background: transparent;
-  box-shadow: 0 0 32px var(--reveal-color);
+  inset: 0;
+  background: var(--reveal-color);
   pointer-events: none;
-  will-change: transform, opacity;
+  will-change: clip-path, opacity;
 }
 
-.theme-reveal::before,
-.theme-reveal::after {
-  position: absolute;
-  border: 1px solid var(--reveal-color);
-  border-radius: inherit;
-  content: "";
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-.theme-reveal::before {
-  inset: 6%;
+::view-transition-old(root) {
+  z-index: 1;
 }
 
-.theme-reveal::after {
-  inset: 12%;
-  opacity: 0.65;
+html.theme-changing::view-transition-new(root) {
+  z-index: 2;
+  animation: themeRevealFromToggle 680ms var(--ease) both;
+}
+
+@keyframes themeRevealFromToggle {
+  from {
+    clip-path: circle(
+      0 at var(--theme-origin-x, 100%) var(--theme-origin-y, 0)
+    );
+    opacity: 0.58;
+  }
+
+  to {
+    clip-path: circle(
+      var(--theme-reveal-radius, 150vmax) at var(--theme-origin-x, 100%)
+        var(--theme-origin-y, 0)
+    );
+    opacity: 1;
+  }
 }
 
 .theme-toggle__label {

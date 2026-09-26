@@ -84,8 +84,8 @@ const WALK_CYCLES = 2;
 const MAX_CHAT_MESSAGE_LENGTH = 600;
 
 const starterQuestions = [
+  "Hi corvus!",
   "What kind of developer is JM?",
-  "Tell me about TMC Connect.",
   "Which projects use mobile technology?",
 ] as const;
 
