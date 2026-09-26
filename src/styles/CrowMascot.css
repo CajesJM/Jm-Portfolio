@@ -767,11 +767,6 @@
   opacity: 0.8;
 }
 
-.corvus__composer textarea:disabled {
-  cursor: wait;
-  opacity: 0.62;
-}
-
 .corvus__composer-row:focus-within {
   outline: 2px solid var(--ink);
   outline-offset: 2px;

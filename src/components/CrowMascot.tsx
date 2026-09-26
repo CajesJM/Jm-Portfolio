@@ -82,6 +82,11 @@ const WALK_FRAME_DURATION = 115;
 const RETURN_WALK_FRAME_DURATION = 175;
 const WALK_CYCLES = 2;
 const MAX_CHAT_MESSAGE_LENGTH = 600;
+const DRAG_DISTANCE_THRESHOLD = 6;
+const DRAG_HORIZONTAL_INSET = 44;
+const DRAG_VERTICAL_INSET = 38;
+const MIN_FLIGHT_CLEARANCE = 20;
+const MAX_FLIGHT_CLEARANCE = 36;
 
 const starterQuestions = [
   "Hi corvus!",
@@ -107,6 +112,26 @@ type DragState = {
   x: number;
   y: number;
   bounds: DOMRect;
+};
+
+const getClampedDragOffset = (
+  drag: DragState,
+  clientX: number,
+  clientY: number,
+) => {
+  const rawX = clientX - drag.startX;
+  const rawY = clientY - drag.startY;
+
+  return {
+    x: Math.min(
+      window.innerWidth - drag.bounds.left - DRAG_HORIZONTAL_INSET,
+      Math.max(-drag.bounds.right + DRAG_HORIZONTAL_INSET, rawX),
+    ),
+    y: Math.min(
+      window.innerHeight - drag.bounds.top - DRAG_VERTICAL_INSET,
+      Math.max(-drag.bounds.bottom + DRAG_VERTICAL_INSET, rawY),
+    ),
+  };
 };
 
 const decodeImage = (source: string) =>
@@ -517,13 +542,26 @@ export default function CrowMascot() {
     const mascot = mascotRef.current;
     if (!drag || !mascot || event.pointerId !== drag.pointerId) return;
 
+    // A quick release can arrive before the last pointermove. Sample the
+    // pointer-up position so the return behavior matches where Corvus landed.
+    if (event.type === "pointerup") {
+      const finalOffset = getClampedDragOffset(
+        drag,
+        event.clientX,
+        event.clientY,
+      );
+      drag.x = finalOffset.x;
+      drag.y = finalOffset.y;
+      mascot.style.transform = `translate3d(${drag.x}px, ${drag.y}px, 0)`;
+    }
+
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
     dragState.current = null;
 
     const distance = Math.hypot(drag.x, drag.y);
-    if (distance < 6) {
+    if (distance < DRAG_DISTANCE_THRESHOLD) {
       mascot.style.removeProperty("transform");
       setReturnMode("idle");
       return;
@@ -534,8 +572,13 @@ export default function CrowMascot() {
     suppressClick.current = true;
 
     const birdHeight = birdRef.current?.getBoundingClientRect().height ?? 180;
-    const flightThreshold = Math.max(72, birdHeight * 0.42);
-    const mode: ReturnMode = drag.y < -flightThreshold ? "flying" : "walking";
+    const groundClearance = Math.min(
+      MAX_FLIGHT_CLEARANCE,
+      Math.max(MIN_FLIGHT_CLEARANCE, birdHeight * 0.14),
+    );
+    const releaseAltitude = Math.max(0, -drag.y);
+    const mode: ReturnMode =
+      releaseAltitude > groundClearance ? "flying" : "walking";
     const direction: ReturnDirection = drag.x < 0 ? "right" : "left";
     setReturnDirection(direction);
     setReturnMode(mode);
@@ -637,20 +680,13 @@ export default function CrowMascot() {
 
     event.preventDefault();
     event.stopPropagation();
-    const rawX = event.clientX - drag.startX;
-    const rawY = event.clientY - drag.startY;
-    const horizontalInset = 44;
-    const verticalInset = 38;
-    drag.x = Math.min(
-      window.innerWidth - drag.bounds.left - horizontalInset,
-      Math.max(-drag.bounds.right + horizontalInset, rawX),
-    );
-    drag.y = Math.min(
-      window.innerHeight - drag.bounds.top - verticalInset,
-      Math.max(-drag.bounds.bottom + verticalInset, rawY),
-    );
+    const offset = getClampedDragOffset(drag, event.clientX, event.clientY);
+    drag.x = offset.x;
+    drag.y = offset.y;
 
-    if (Math.hypot(drag.x, drag.y) >= 6) suppressClick.current = true;
+    if (Math.hypot(drag.x, drag.y) >= DRAG_DISTANCE_THRESHOLD) {
+      suppressClick.current = true;
+    }
     mascot.style.transform = `translate3d(${drag.x}px, ${drag.y}px, 0)`;
   };
 
@@ -904,7 +940,6 @@ export default function CrowMascot() {
                 maxLength={MAX_CHAT_MESSAGE_LENGTH}
                 rows={1}
                 placeholder="Ask about a project or capability…"
-                disabled={chatPhase === "thinking" || chatPhase === "speaking"}
                 onChange={(event) => {
                   setDraft(event.target.value);
                   setChatError("");
@@ -917,7 +952,9 @@ export default function CrowMascot() {
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
-                    event.currentTarget.form?.requestSubmit();
+                    if (chatPhase !== "thinking" && chatPhase !== "speaking") {
+                      event.currentTarget.form?.requestSubmit();
+                    }
                   }
                 }}
               />
@@ -934,7 +971,9 @@ export default function CrowMascot() {
               </button>
             </div>
             <span className="corvus__composer-note">
-              Enter to send · Shift + Enter for a new line
+              {chatPhase === "thinking" || chatPhase === "speaking"
+                ? "Corvus is answering · Keep typing while you wait"
+                : "Enter to send · Shift + Enter for a new line"}
             </span>
           </form>
         </section>
